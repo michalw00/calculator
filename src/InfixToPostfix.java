@@ -6,25 +6,28 @@ import java.util.regex.Pattern;
 public class InfixToPostfix {
     public static final Pattern UNSIGNED_DOUBLE = Pattern.compile("(\\d+\\.?\\d*|\\.\\d+([Ee][-+]?\\d+)?)");
     public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
+    public static final Pattern OPERATOR = Pattern.compile("[+\\-*/]");
 
     public static String infixToPostfix(String expression) {
         CustomStack<Character> stack = new CustomStack<>();
-        Matcher matcher = UNSIGNED_DOUBLE.matcher(expression);
+        Matcher matcherNumbers = UNSIGNED_DOUBLE.matcher(expression);
+        Matcher matcherOperators = OPERATOR.matcher(expression);
         Scanner scan = new Scanner(expression);
         StringBuilder stringBuilder = new StringBuilder();
         String next;
 
         do {
 
+            // I had to use Matcher for more complex patterns, as something didn't work previously when I tried to match with Scanner.
             if (scan.hasNext("\\(")) {
                 stack.push(scan.findInLine("\\(").charAt(0));
                 scan.next();
-            } else if (matcher.find()) {
-                next = matcher.group();
+            } else if (matcherNumbers.find()) {
+                next = matcherNumbers.group();
                 stringBuilder.append(next);
                 scan.next();
-            } else if (scan.hasNext("[+\\-*/]")) {
-                next = scan.findInLine("[+\\-*/]");
+            } else if (matcherOperators.find()) {
+                next = matcherOperators.group();
                 stringBuilder.append(next.charAt(0));
                 scan.next();
             } else if (scan.hasNext("\\)")) {
@@ -38,7 +41,7 @@ public class InfixToPostfix {
                 Character temp;
                 try {
                     temp = stack.peek();
-                    if (temp == '(') {
+                    if (temp == '(') { // todo: this might never be matched, need to look into it
                         stack.pop();
                     }
                 } catch (EmptyStackException e) {
@@ -47,7 +50,7 @@ public class InfixToPostfix {
                 }
             }
 
-        } while (scan.hasNext()); // expression characters need to be separated by spaces for this to work
+        } while (scan.hasNext()); // todo: expression characters need to be separated by spaces for this to work, need to fix this
 
         if (!stack.isEmpty()) {
             System.err.println("Expression wasn't fully parenthesized.");
