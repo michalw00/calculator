@@ -1,13 +1,15 @@
 import java.util.EmptyStackException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class infixToPostfix {
-    public static final Pattern UNSIGNED_DOUBLE = Pattern.compile("((\\d+\\.?\\d*)|(\\.\\d+))([Ee][-+]?\\d+)?.*?");
+public class InfixToPostfix {
+    public static final Pattern UNSIGNED_DOUBLE = Pattern.compile("(\\d+\\.?\\d*|\\.\\d+([Ee][-+]?\\d+)?)");
     public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
 
     public static String infixToPostfix(String expression) {
         CustomStack<Character> stack = new CustomStack<>();
+        Matcher matcher = UNSIGNED_DOUBLE.matcher(expression);
         Scanner scan = new Scanner(expression);
         StringBuilder stringBuilder = new StringBuilder();
         String next;
@@ -17,9 +19,9 @@ public class infixToPostfix {
             if (scan.hasNext("\\(")) {
                 stack.push(scan.findInLine("\\(").charAt(0));
                 scan.next();
-            } else if (scan.hasNext(UNSIGNED_DOUBLE)) { // todo: this condition is false for some reason
-                next = scan.findInLine(UNSIGNED_DOUBLE);
-                stringBuilder.append(next.charAt(0));
+            } else if (matcher.find()) {
+                next = matcher.group();
+                stringBuilder.append(next);
                 scan.next();
             } else if (scan.hasNext("[+\\-*/]")) {
                 next = scan.findInLine("[+\\-*/]");
@@ -33,11 +35,15 @@ public class infixToPostfix {
                     System.err.println("Too few operations in the infix expression.");
                     System.exit(1);
                 }
-                if (stack.peek() == '(') {
-                    stack.pop();
-                } else {
-                    System.err.println("No balanced parentheses.");
-                    System.exit(1);
+                Character temp;
+                try {
+                    temp = stack.peek();
+                    if (temp == '(') {
+                        stack.pop();
+                    }
+                } catch (EmptyStackException e) {
+                    //System.err.println("No balanced parentheses.");
+                    //System.exit(1);
                 }
             }
 
