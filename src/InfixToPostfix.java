@@ -12,7 +12,7 @@ public class InfixToPostfix {
         CustomStack<Character> stack = new CustomStack<>();
         Matcher matcherNumbers = UNSIGNED_DOUBLE.matcher(expression);
         Matcher matcherOperators = OPERATOR.matcher(expression);
-        Scanner scan = new Scanner(expression);
+        Scanner scan = new Scanner(expression).useDelimiter("((?<=\\+)|(?=\\+)|(?<=-)|(?=-)|(?<=\\*)|(?=\\*)|(?<=/)|(?=/)|(?<=\\()|(?=\\)))");
         StringBuilder stringBuilder = new StringBuilder();
         String next;
 
@@ -23,14 +23,16 @@ public class InfixToPostfix {
                 stack.push(scan.findInLine("\\(").charAt(0));
                 scan.next();
             } else if (matcherNumbers.find()) {
-                next = matcherNumbers.group();
+                next = matcherNumbers.group(); // this only works for single digit numbers
                 stringBuilder.append(next);
                 scan.next();
             } else if (matcherOperators.find()) {
                 next = matcherOperators.group();
-                stringBuilder.append(next.charAt(0));
-                scan.next();
-            } else if (scan.hasNext("\\)")) {
+                //stringBuilder.append(next.charAt(0));
+                stack.push(next.charAt(0));
+                scan.next(); // todo: translate this whole thing to maybe Matcher class, because there's one scan.next() too many, which means that scan.hasNext("//)") is never checked
+            } else if (scan.hasNext("\\)")) { // todo: this condition is never checked
+                System.out.println("!!!!");
                 scan.next();
                 try {
                     stringBuilder.append(stack.pop());
@@ -41,16 +43,17 @@ public class InfixToPostfix {
                 Character temp;
                 try {
                     temp = stack.peek();
-                    if (temp == '(') { // todo: this might never be matched, need to look into it
+                    System.out.println(temp);
+                    if (temp == '(') {
                         stack.pop();
                     }
                 } catch (EmptyStackException e) {
-                    //System.err.println("No balanced parentheses.");
-                    //System.exit(1);
+                    System.err.println("No balanced parentheses.");
+                    System.exit(1);
                 }
             }
 
-        } while (scan.hasNext()); // todo: expression characters need to be separated by spaces for this to work, need to fix this
+        } while (scan.hasNext()); // only works with spaces
 
         if (!stack.isEmpty()) {
             System.err.println("Expression wasn't fully parenthesized.");
@@ -62,6 +65,6 @@ public class InfixToPostfix {
 
 
     public static void main(String[] args) {
-        System.out.println(infixToPostfix("( 1 + 2 )"));
+        System.out.println(infixToPostfix("(1+2)"));
     }
 }
