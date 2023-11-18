@@ -11,31 +11,34 @@ public class InfixToPostfix {
 
     public static String infixToPostfix(String expression) {
         CustomStack<Character> stack = new CustomStack<>();
-        Matcher matcherNumbers = UNSIGNED_DOUBLE.matcher(expression);
-        Matcher matcherOperators = OPERATOR.matcher(expression);
         Scanner scan = new Scanner(expression).useDelimiter("((?<=\\+)|(?=\\+)|(?<=-)|(?=-)|(?<=\\*)|(?=\\*)|(?<=/)|(?=/)|(?<=\\()|(?=\\)))");
         StringBuilder stringBuilder = new StringBuilder();
         String next;
 
         do {
 
-            if (scan.hasNext("\\(")) { // Note: Scanner for some reason didn't work with more complex patterns, I had to use Matcher for this reason.
-                stack.push(scan.findInLine("\\(").charAt(0));
-            } else if (matcherNumbers.find()) {
-                next = matcherNumbers.group(); // this only works for single digit numbers, I need to place space after every number
-                stringBuilder.append(next);
-            } else if (matcherOperators.find()) {
-                next = matcherOperators.group();
+            if (scan.hasNext("\\(")) {
+                next = scan.next();
                 stack.push(next.charAt(0));
-            }
-            if (scan.hasNext("\\)")) {
+            } else if (scan.hasNext(UNSIGNED_DOUBLE)) {
+                next = scan.next(); // this only works for single digit numbers, I need to place space after every number
+                stringBuilder.append(next);
+            } else if (scan.hasNext(OPERATOR)) {
+                next = scan.next();
+                stack.push(next.charAt(0));
+            } else if (scan.hasNext("\\)")) { // todo: This block needs work.
+                scan.next();
+                Character temp;
+
                 try {
-                    stringBuilder.append(stack.pop());
+                    temp = stack.peek();
+                    if (temp.toString().matches("[+\\-*/]")) {
+                        stringBuilder.append(stack.pop());
+                    } else throw new EmptyStackException();
                 } catch (EmptyStackException e) {
                     System.err.println("Too few operations in the infix expression.");
                     System.exit(1);
                 }
-                Character temp;
                 try {
                     temp = stack.peek();
                     if (temp == '(') {
@@ -46,7 +49,6 @@ public class InfixToPostfix {
                     System.exit(1);
                 }
             }
-            scan.next();
 
         } while (scan.hasNext());
 
@@ -60,6 +62,6 @@ public class InfixToPostfix {
 
 
     public static void main(String[] args) {
-        System.out.println(infixToPostfix("(11+2)"));
+        System.out.println(infixToPostfix("(1+2)"));
     }
 }
