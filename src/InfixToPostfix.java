@@ -8,6 +8,9 @@ public class InfixToPostfix {
     public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
     public static final Pattern OPERATOR = Pattern.compile("[+\\-*/]");
 
+    // todo: space after numbers (currently only works with one digit numbers)
+    // todo: handling lacking parenthesis scenario properly
+
 
     public static String infixToPostfix(String expression) {
         CustomStack<Character> stack = new CustomStack<>();
@@ -29,16 +32,28 @@ public class InfixToPostfix {
             } else if (scan.hasNext("\\)")) { // todo: This block needs work.
                 scan.next();
                 Character temp;
+                Character tempPop;
 
                 try {
-                    temp = stack.peek();
-                    if (temp.toString().matches("[+\\-*/]")) {
-                        stringBuilder.append(stack.pop());
+                    if (stack.peek().toString().matches("[+\\-*/]")) {
+                        tempPop = stack.pop();
+                        temp = stack.peek();
+                        boolean isOperator = temp.toString().matches("[+\\-*/]");
+                        if (isOperator && firstPrecedes(tempPop, temp)) {
+                            stringBuilder.append(tempPop);
+                        } else if (isOperator && firstPrecedes(temp, tempPop)) {
+                            stringBuilder.append(temp);
+                            stack.pop();
+                            stack.push(tempPop);
+                        } else if (!isOperator) {
+                            stringBuilder.append(tempPop);
+                        }
                     } else throw new EmptyStackException();
                 } catch (EmptyStackException e) {
                     System.err.println("Too few operations in the infix expression.");
                     System.exit(1);
                 }
+
                 try {
                     temp = stack.peek();
                     if (temp == '(') {
@@ -59,9 +74,52 @@ public class InfixToPostfix {
         return stringBuilder.toString();
     }
 
+    private static boolean firstPrecedes(char firstOperator, char secondOperator) {
+        switch (firstOperator) {
+            case '+':
+                switch (secondOperator) {
+                    case '+':
+                    case '-':
+                    case '*':
+                    case '/':
+                        return false;
+                }
+            case '-':
+                switch (secondOperator) {
+                    case '+':
+                    case '-':
+                    case '*':
+                    case '/':
+                        return false;
+                }
+            case '*':
+                switch (secondOperator) {
+                    case '+':
+                    case '-':
+                        return true;
+                    case '*':
+                    case '/':
+                        return false;
+                }
+            case '/':
+                switch (secondOperator) {
+                    case '+':
+                    case '-':
+                        return true;
+                    case '*':
+                    case '/':
+                        return false;
+                }
+            default:
+                System.err.println("This shouldn't have happened.");
+                System.exit(1);
+        }
+        return false;
+    }
+
 
 
     public static void main(String[] args) {
-        System.out.println(infixToPostfix("(1+2)"));
+        System.out.println(infixToPostfix("((1+2)*2)"));
     }
 }
