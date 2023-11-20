@@ -28,8 +28,12 @@ public class InfixToPostfix {
                 stringBuilder.append(next);
             } else if (scan.hasNext(OPERATOR)) {
                 next = scan.next();
-                stack.push(next.charAt(0));
-            } else if (scan.hasNext("\\)")) { // todo: This block needs work.
+                while (stack.isEmpty() || stack.peek() == '(' || firstPrecedes(next.charAt(0), stack.peek())) {
+                    stack.pop();
+                    stringBuilder.append(next);
+                }
+                stack.push(scan.next().charAt(0));
+            } else if (scan.hasNext("\\)")) { // todo
                 scan.next();
                 Character temp;
                 Character tempPop;
