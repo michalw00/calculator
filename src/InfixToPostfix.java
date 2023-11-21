@@ -1,15 +1,10 @@
-import java.util.EmptyStackException;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InfixToPostfix {
     public static final Pattern UNSIGNED_DOUBLE = Pattern.compile("(\\d+\\.?\\d*|\\.\\d+([Ee][-+]?\\d+)?)");
     public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
     public static final Pattern OPERATOR = Pattern.compile("[+\\-*/]");
-
-    // todo: space after numbers (currently only works with one digit numbers)
-    // todo: handling lacking parenthesis scenario properly
 
 
     public static String infixToPostfix(String expression) {
@@ -24,15 +19,15 @@ public class InfixToPostfix {
                 next = scan.next();
                 stack.push(next.charAt(0));
             } else if (scan.hasNext(UNSIGNED_DOUBLE)) {
-                next = scan.next(); // this only works for single digit numbers, I need to place space after every number
-                stringBuilder.append(next);
+                next = scan.next();
+                stringBuilder.append(next).append(" ");
             } else if (scan.hasNext(OPERATOR)) {
                 next = scan.next();
                 while (!stack.isEmpty() && stack.peek() != '(' && firstPrecedes(next.charAt(0), stack.peek())) {
-                    stringBuilder.append(stack.pop());
+                    stringBuilder.append(stack.pop()).append(" ");
                 }
                 stack.push(next.charAt(0));
-            } else { // todo
+            } else {
                 if (!scan.hasNext("\\)")) {
                     System.err.println("Something went wrong, no right parenthesis was present.");
                     System.exit(1);
@@ -40,7 +35,7 @@ public class InfixToPostfix {
                 scan.next();
 
                 while (!stack.isEmpty() && stack.peek() != '(') {
-                    stringBuilder.append(stack.pop());
+                    stringBuilder.append(stack.pop()).append(" ");
                 }
                 if (!stack.isEmpty() && stack.peek() == '(') {
                     stack.pop();
@@ -60,7 +55,7 @@ public class InfixToPostfix {
             }
 
 
-        return stringBuilder.toString();
+        return stringBuilder.toString().trim();
     }
 
     private static boolean firstPrecedes(char firstOperator, char secondOperator) {
@@ -109,6 +104,6 @@ public class InfixToPostfix {
 
 
     public static void main(String[] args) {
-        System.out.println(infixToPostfix("(1+2)*2"));
+        System.out.println(infixToPostfix("(12+2)*2"));
     }
 }
