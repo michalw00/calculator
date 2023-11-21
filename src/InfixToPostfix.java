@@ -40,7 +40,7 @@ public class InfixToPostfix {
                 if (!stack.isEmpty() && stack.peek() == '(') {
                     stack.pop();
                 } else {
-                    System.err.println("Unbalanced parenthesis. 1");
+                    System.err.println("Unbalanced parenthesis.");
                     System.exit(1);
                 }
             }
@@ -48,10 +48,10 @@ public class InfixToPostfix {
 
             while (!stack.isEmpty()) {
                 if (stack.peek() == '(') {
-                    System.err.println("Unbalanced parenthesis. 2");
+                    System.err.println("Unbalanced parenthesis.");
                     System.exit(1);
                 }
-                stringBuilder.append(stack.pop());
+                stringBuilder.append(stack.pop()).append(" ");
             }
 
 
@@ -101,9 +101,50 @@ public class InfixToPostfix {
         return false;
     }
 
+    public static double evaluatePostfix(String expression) {
+        CustomStack<Double> stack = new CustomStack<>();
+        Scanner input = new Scanner(expression);
+        String next;
+
+        do {
+            if (input.hasNext(UNSIGNED_DOUBLE)) {
+                next = input.findInLine(UNSIGNED_DOUBLE); // NOTE: finds next occurrence, that's how it scans the string, character by character
+                stack.push(Double.valueOf(next));
+            } else if (input.hasNext(CHARACTER)){
+                next = input.findInLine(CHARACTER);
+
+                if (next.matches("\\s+")) continue; // Skips space characters
+
+                double temp2 = stack.pop();
+                double temp1 = stack.pop();
+                double result = 0;
+                switch(next.charAt(0)) {
+                    case '*':
+                        result = temp1 * temp2;
+                        break;
+                    case '/':
+                        result = temp1 / temp2;
+                        break;
+                    case '+':
+                        result = temp1 + temp2;
+                        break;
+                    case '-':
+                        result = temp1 - temp2;
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Illegal character");
+                }
+                stack.push(result);
+            }
+        } while(input.hasNext());
+        input.close();
+        return stack.pop();
+
+    }
+
 
 
     public static void main(String[] args) {
-        System.out.println(infixToPostfix("(12+2)*2"));
+        System.out.println(evaluatePostfix(infixToPostfix("2+2*2"))); // todo: 2+2*2=8.0 -- need to fix this!
     }
 }
