@@ -28,52 +28,37 @@ public class InfixToPostfix {
                 stringBuilder.append(next);
             } else if (scan.hasNext(OPERATOR)) {
                 next = scan.next();
-                while (stack.isEmpty() || stack.peek() == '(' || firstPrecedes(next.charAt(0), stack.peek())) {
-                    stack.pop();
-                    stringBuilder.append(next);
+                while (!stack.isEmpty() && stack.peek() != '(' && firstPrecedes(next.charAt(0), stack.peek())) {
+                    stringBuilder.append(stack.pop());
                 }
-                stack.push(scan.next().charAt(0));
-            } else if (scan.hasNext("\\)")) { // todo
-                scan.next();
-                Character temp;
-                Character tempPop;
-
-                try {
-                    if (stack.peek().toString().matches("[+\\-*/]")) {
-                        tempPop = stack.pop();
-                        temp = stack.peek();
-                        boolean isOperator = temp.toString().matches("[+\\-*/]");
-                        if (isOperator && firstPrecedes(tempPop, temp)) {
-                            stringBuilder.append(tempPop);
-                        } else if (isOperator && firstPrecedes(temp, tempPop)) {
-                            stringBuilder.append(temp);
-                            stack.pop();
-                            stack.push(tempPop);
-                        } else if (!isOperator) {
-                            stringBuilder.append(tempPop);
-                        }
-                    } else throw new EmptyStackException();
-                } catch (EmptyStackException e) {
-                    System.err.println("Too few operations in the infix expression.");
+                stack.push(next.charAt(0));
+            } else { // todo
+                if (!scan.hasNext("\\)")) {
+                    System.err.println("Something went wrong, no right parenthesis was present.");
                     System.exit(1);
                 }
+                scan.next();
 
-                try {
-                    temp = stack.peek();
-                    if (temp == '(') {
-                        stack.pop();
-                    }
-                } catch (EmptyStackException e) {
-                    System.err.println("No balanced parentheses.");
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    stringBuilder.append(stack.pop());
+                }
+                if (!stack.isEmpty() && stack.peek() == '(') {
+                    stack.pop();
+                } else {
+                    System.err.println("Unbalanced parenthesis. 1");
                     System.exit(1);
                 }
             }
-
         } while (scan.hasNext());
 
-        if (!stack.isEmpty()) {
-            System.err.println("Expression wasn't fully parenthesized.");
-        }
+            while (!stack.isEmpty()) {
+                if (stack.peek() == '(') {
+                    System.err.println("Unbalanced parenthesis. 2");
+                    System.exit(1);
+                }
+                stringBuilder.append(stack.pop());
+            }
+
 
         return stringBuilder.toString();
     }
@@ -124,6 +109,6 @@ public class InfixToPostfix {
 
 
     public static void main(String[] args) {
-        System.out.println(infixToPostfix("((1+2)*2)"));
+        System.out.println(infixToPostfix("(1+2)*2"));
     }
 }
