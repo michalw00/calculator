@@ -23,7 +23,7 @@ public class InfixToPostfix {
                 stringBuilder.append(next).append(" ");
             } else if (scan.hasNext(OPERATOR)) {
                 next = scan.next();
-                while (!stack.isEmpty() && stack.peek() != '(' && firstPrecedes(next.charAt(0), stack.peek())) {
+                while (!stack.isEmpty() && stack.peek() != '(' && firstPrecedes(stack.peek(), next.charAt(0))) {
                     stringBuilder.append(stack.pop()).append(" ");
                 }
                 stack.push(next.charAt(0));
@@ -145,6 +145,6 @@ public class InfixToPostfix {
 
 
     public static void main(String[] args) {
-        System.out.println(evaluatePostfix(infixToPostfix("2+2*2"))); // todo: 2+2*2=8.0 -- need to fix this!
+        System.out.println("evaluatePostfix result: "+evaluatePostfix(infixToPostfix("2+2*2")));
     }
 }
