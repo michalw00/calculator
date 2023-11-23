@@ -117,7 +117,7 @@ public class InfixToPostfix {
 
                 double temp2 = stack.pop();
                 double temp1 = stack.pop();
-                double result = 0;
+                double result;
                 switch(next.charAt(0)) {
                     case '*':
                         result = temp1 * temp2;

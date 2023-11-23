@@ -21,6 +21,11 @@ public class ActionListeners {
 			Calculator.operations(e);
 		}
 	}
+	public static class sumListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Calculator.sum(e);
+		}
+	}
 
 
 

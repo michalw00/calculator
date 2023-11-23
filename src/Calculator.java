@@ -1,9 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class Calculator extends JFrame {
     public static final int WIDTH = 300;
@@ -11,10 +9,12 @@ public class Calculator extends JFrame {
     public static final int NUMBER_OF_DIGITS = 20;
     public static final ArrayList<Integer> NUMBERS = new ArrayList<>();
 
+    public static StringBuilder stringBuilder = new StringBuilder();
     public static JTextField resultField;
     public static JTextField operandField;
     public static double resultValue = 0.0;
     public static String currentOperator;
+
 
 
 
@@ -34,7 +34,7 @@ public class Calculator extends JFrame {
         // result panel
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new FlowLayout());
-        resultField = new JTextField("Result: "+ resultValue,NUMBER_OF_DIGITS);
+        resultField = new JTextField("Result: "+ resultValue, NUMBER_OF_DIGITS);
         resultField.setBackground(Color.WHITE);
         textPanel.add(resultField);
         add(textPanel, BorderLayout.NORTH);
@@ -69,6 +69,7 @@ public class Calculator extends JFrame {
         JButton equals = new JButton("=");
         ActionListeners.numberListener newNumberListener = new ActionListeners.numberListener();
         ActionListeners.operationListener newOperationListener = new ActionListeners.operationListener();
+        ActionListeners.sumListener newSumListener = new ActionListeners.sumListener();
         zero.addActionListener(newNumberListener);
         one.addActionListener(newNumberListener);
         two.addActionListener(newNumberListener);
@@ -84,7 +85,7 @@ public class Calculator extends JFrame {
         plus.addActionListener(newOperationListener);
         minus.addActionListener(newOperationListener);
         decimalPoint.addActionListener(newOperationListener);
-        equals.addActionListener(newOperationListener);
+        equals.addActionListener(newSumListener);
         buttonPanel.add(zero);
         buttonPanel.add(one);
         buttonPanel.add(two);
@@ -130,34 +131,36 @@ public class Calculator extends JFrame {
 
     public static void operations(ActionEvent e) { // todo
         String actionCommand = e.getActionCommand();
+        double operand = Double.parseDouble(operandField.getText());
 
-        try {
-            double operand = Double.parseDouble(operandField.getText());
+        if (currentOperator != null) {
 
-            if (currentOperator == null) {
-                resultValue = operand;
-            } else {
-                switch (currentOperator) { // todo
-                    case "+" -> resultValue += operand;
-                    case "-" -> resultValue -= operand;
-                    case "*" -> resultValue *= operand;
-                    case "/" -> {
-                        if (Math.abs(operand) < 1.0e-10) {
-                            operandField.setText("Division by zero");
-                            return;
-                        }
-                        resultValue /= operand;
+            switch (currentOperator) {
+                case "+" -> stringBuilder.append("+").append(operand);
+                case "-" -> stringBuilder.append("-").append(operand);
+                case "*" -> stringBuilder.append("*").append(operand);
+                case "/" -> {
+                    if (Math.abs(operand) < 1.0e-10) {
+                        operandField.setText("Division by zero");
+                        return;
                     }
-                    default -> operandField.setText("Unexpected error.");
+                    stringBuilder.append("/").append(operand);
                 }
+                default -> operandField.setText("Unexpected error.");
             }
-
             operandField.setText("");
-            currentOperator = actionCommand.equals("=") ? null : actionCommand;
-            resultField.setText(Double.toString(resultValue));
-        } catch (NumberFormatException ex) {
-            operandField.setText("ERROR: Invalid input");
-        }
+            resultField.setText(stringBuilder.toString());
+
+        } else stringBuilder.append(operand);
+
+        currentOperator = actionCommand;
+        operandField.setText("");
+        resultField.setText(stringBuilder.toString()+currentOperator);
+
+    }
+
+    public static void sum(ActionEvent e) { // todo
+        String actionCommand = e.getActionCommand();
 
     }
 
