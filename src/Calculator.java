@@ -129,7 +129,7 @@ public class Calculator extends JFrame {
 
     }
 
-    public static void operations(ActionEvent e) { // todo
+    public static void operations(ActionEvent e) { // todo, reset button doesn't handle string builder correctly
         String actionCommand = e.getActionCommand();
         double operand = Double.parseDouble(operandField.getText());
 
@@ -159,9 +159,20 @@ public class Calculator extends JFrame {
 
     }
 
-    public static void sum(ActionEvent e) { // todo
-        String actionCommand = e.getActionCommand();
+    public static void sum(ActionEvent e) { //todo
+        String resultToString = resultField.getText();
+        char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
+        if (!String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString())) {
+            return;
+        }
+        String operandFieldText = operandField.getText();
+        resultToString += operandFieldText;
+        String newResultField = Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
+        operandField.setText("");
 
+        resultField.setText(newResultField);
+        stringBuilder.setLength(0);
+        stringBuilder.append(newResultField);
     }
 
 
