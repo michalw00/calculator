@@ -131,7 +131,14 @@ public class Calculator extends JFrame {
 
     public static void operations(ActionEvent e) { // todo, reset button doesn't handle string builder correctly
         String actionCommand = e.getActionCommand();
-        double operand = Double.parseDouble(operandField.getText());
+
+        String operand;
+        String resultToString = resultField.getText();
+        if (!isLastCharacterOperator(resultToString) && !stringBuilder.isEmpty()) {
+            operand = "";
+        } else {
+            operand = operandField.getText();
+        }
 
         if (currentOperator != null) {
 
@@ -140,7 +147,7 @@ public class Calculator extends JFrame {
                 case "-" -> stringBuilder.append("-").append(operand);
                 case "*" -> stringBuilder.append("*").append(operand);
                 case "/" -> {
-                    if (Math.abs(operand) < 1.0e-10) {
+                    if (Math.abs(Double.parseDouble(operand)) < 1.0e-10) {
                         operandField.setText("Division by zero");
                         return;
                     }
@@ -153,29 +160,31 @@ public class Calculator extends JFrame {
 
         } else stringBuilder.append(operand);
 
-        currentOperator = actionCommand;
         operandField.setText("");
-        resultField.setText(stringBuilder.toString()+currentOperator);
+        resultField.setText(stringBuilder.toString()+actionCommand);
 
     }
 
     public static void sum(ActionEvent e) { //todo
         String resultToString = resultField.getText();
-        char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
-        if (!String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString())) {
+        if (!isLastCharacterOperator(resultToString)) {
             return;
         }
         String operandFieldText = operandField.getText();
         resultToString += operandFieldText;
-        String newResultField = Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
+        String newOperandField = Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
         operandField.setText("");
 
-        resultField.setText(newResultField);
+        resultField.setText(resultField.getText()+operandFieldText+"=");
+        operandField.setText(newOperandField);
         stringBuilder.setLength(0);
-        stringBuilder.append(newResultField);
+        stringBuilder.append(newOperandField);
     }
 
-
-
-
+    private static boolean isLastCharacterOperator(String resultToString) {
+        char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
+        if (String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString())) {
+            return true;
+        } else return false;
+    }
 }
