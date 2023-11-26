@@ -6,7 +6,7 @@ public class ActionListeners {
 
 
 
-	public static class numberListener implements ActionListener {
+	public static class NumberListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				Calculator.numbers(e);
@@ -16,14 +16,19 @@ public class ActionListeners {
 			}
 		}
 	}
-	public static class operationListener implements ActionListener {
+	public static class OperationListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			Calculator.operations(e);
 		}
 	}
-	public static class sumListener implements ActionListener {
+	public static class SumListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			Calculator.sum(e);
+			Calculator.sum();
+		}
+	}
+	public static class ParenthesisListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Calculator.addParenthesis(e);
 		}
 	}
 

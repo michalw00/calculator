@@ -13,8 +13,7 @@ public class Calculator extends JFrame {
     public static JTextField resultField;
     public static JTextField operandField;
     public static double resultValue = 0.0;
-    public static String currentOperator;
-
+    public static String lastOperator; // need to clear this on reset
 
 
 
@@ -67,9 +66,12 @@ public class Calculator extends JFrame {
         JButton minus = new JButton("-");
         JButton decimalPoint = new JButton(".");
         JButton equals = new JButton("=");
-        ActionListeners.numberListener newNumberListener = new ActionListeners.numberListener();
-        ActionListeners.operationListener newOperationListener = new ActionListeners.operationListener();
-        ActionListeners.sumListener newSumListener = new ActionListeners.sumListener();
+        JButton leftBracket = new JButton("(");
+        JButton rightBracket = new JButton(")");
+        ActionListeners.NumberListener newNumberListener = new ActionListeners.NumberListener();
+        ActionListeners.OperationListener newOperationListener = new ActionListeners.OperationListener();
+        ActionListeners.SumListener newSumListener = new ActionListeners.SumListener();
+        ActionListeners.ParenthesisListener newParenthesisListener = new ActionListeners.ParenthesisListener();
         zero.addActionListener(newNumberListener);
         one.addActionListener(newNumberListener);
         two.addActionListener(newNumberListener);
@@ -86,20 +88,26 @@ public class Calculator extends JFrame {
         minus.addActionListener(newOperationListener);
         decimalPoint.addActionListener(newOperationListener);
         equals.addActionListener(newSumListener);
-        buttonPanel.add(zero);
-        buttonPanel.add(one);
-        buttonPanel.add(two);
-        buttonPanel.add(multiply);
-        buttonPanel.add(three);
-        buttonPanel.add(four);
-        buttonPanel.add(five);
-        buttonPanel.add(divide);
-        buttonPanel.add(six);
+
+
         buttonPanel.add(seven);
         buttonPanel.add(eight);
-        buttonPanel.add(plus);
         buttonPanel.add(nine);
+        buttonPanel.add(divide);
+        buttonPanel.add(four);
+        buttonPanel.add(five);
+        buttonPanel.add(six);
+        buttonPanel.add(multiply);
+
+        buttonPanel.add(one);
+        buttonPanel.add(two);
+        buttonPanel.add(three);
+        buttonPanel.add(minus);
+
         buttonPanel.add(decimalPoint);
+        buttonPanel.add(zero);
+
+
 
         JButton reset = new JButton("Reset");
         JButton clear = new JButton("Clear");
@@ -108,13 +116,17 @@ public class Calculator extends JFrame {
             resultField.setText("0.0");
             operandField.setText("");
             stringBuilder.setLength(0);
-            currentOperator = null;
+            lastOperator = null;
         });
         clear.addActionListener(e -> operandField.setText(""));
+        leftBracket.addActionListener(newParenthesisListener);
+        rightBracket.addActionListener(newParenthesisListener);
         buttonPanel.add(equals);
-        buttonPanel.add(minus);
+        buttonPanel.add(plus);
         buttonPanel.add(reset);
         buttonPanel.add(clear);
+        buttonPanel.add(leftBracket);
+        buttonPanel.add(rightBracket);
 
 
         add(buttonPanel, BorderLayout.SOUTH);
@@ -135,43 +147,29 @@ public class Calculator extends JFrame {
 
         String operand;
         String resultToString = resultField.getText();
-        if (!isLastCharacterOperator(resultToString) && !stringBuilder.isEmpty()) {
+        if (isLastCharacterOperator(resultToString) && !stringBuilder.isEmpty()) {
             operand = "";
         } else {
             operand = operandField.getText();
         }
 
-        if (currentOperator != null) {
-
-            switch (currentOperator) {
-                case "+" -> stringBuilder.append("+").append(operand);
-                case "-" -> stringBuilder.append("-").append(operand);
-                case "*" -> stringBuilder.append("*").append(operand);
-                case "/" -> {
-                    if (Math.abs(Double.parseDouble(operand)) < 1.0e-10) {
-                        operandField.setText("Division by zero");
-                        return;
-                    }
-                    stringBuilder.append("/").append(operand);
-                }
-                default -> operandField.setText("Unexpected error.");
-            }
-            operandField.setText("");
-            resultField.setText(stringBuilder.toString());
-
-        } else stringBuilder.append(operand);
-
+        lastOperator = actionCommand;
+        stringBuilder.append(operand).append(actionCommand);
         operandField.setText("");
-        resultField.setText(stringBuilder.toString()+actionCommand);
+        resultField.setText(stringBuilder.toString());
 
     }
 
-    public static void sum(ActionEvent e) { //todo
+    public static void sum() { //todo
         String resultToString = resultField.getText();
-        if (!isLastCharacterOperator(resultToString)) {
+        if (isLastCharacterOperator(resultToString)) {
             return;
         }
         String operandFieldText = operandField.getText();
+        if (lastOperator.charAt(0) == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
+            operandField.setText("ERROR: Division by zero!");
+            return;
+        }
         resultToString += operandFieldText;
         String newOperandField = Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
         operandField.setText("");
@@ -182,10 +180,14 @@ public class Calculator extends JFrame {
         stringBuilder.append(newOperandField);
     }
 
+    public static void addParenthesis(ActionEvent e) {
+        String actionCommand = e.getActionCommand();
+        stringBuilder.append(actionCommand);
+        resultField.setText(stringBuilder.toString());
+    }
+
     private static boolean isLastCharacterOperator(String resultToString) {
         char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
-        if (String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString())) {
-            return true;
-        } else return false;
+        return String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString()) && String.valueOf(lastCharacterOfResult).charAt(0) != '(' && String.valueOf(lastCharacterOfResult).charAt(0) != ')';
     }
 }
