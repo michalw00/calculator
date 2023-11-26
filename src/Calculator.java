@@ -107,6 +107,7 @@ public class Calculator extends JFrame {
             resultValue = 0.0;
             resultField.setText("0.0");
             operandField.setText("");
+            stringBuilder.setLength(0);
             currentOperator = null;
         });
         clear.addActionListener(e -> operandField.setText(""));
