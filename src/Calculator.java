@@ -13,7 +13,7 @@ public class Calculator extends JFrame {
     public static JTextField resultField;
     public static JTextField operandField;
     public static double resultValue = 0.0;
-    public static Character lastOperator; // need to clear this on reset
+    public static Character lastOperator;
 
 
 
@@ -146,19 +146,20 @@ public class Calculator extends JFrame {
 
     }
 
-    public static void operations(ActionEvent e) { // todo, reset button doesn't handle string builder correctly
+    public static void operations(ActionEvent e) { // todo
+        if (isLastCharacterOperator(resultField.getText())) return;
+
         String actionCommand = e.getActionCommand();
-
-        String operand;
-        String resultToString = resultField.getText();
-        if (isLastCharacterOperator(resultToString) && !stringBuilder.isEmpty()) {
-            operand = "";
-        } else {
-            operand = operandField.getText();
-        }
-
         lastOperator = actionCommand.charAt(0);
-        stringBuilder.append(operand).append(actionCommand);
+
+        //String operand;
+        //if (isLastCharacterOperator(resultField.getText()) && !stringBuilder.isEmpty()) {
+        //    operand = "";
+        //} else {
+        //    operand = operandField.getText();
+        //}
+
+        stringBuilder.append(operandField.getText()).append(actionCommand);
         operandField.setText("");
         resultField.setText(stringBuilder.toString());
 
@@ -182,7 +183,7 @@ public class Calculator extends JFrame {
         resultField.setText(resultField.getText()+operandFieldText+"=");
         operandField.setText(newOperandField);
         stringBuilder.setLength(0);
-        stringBuilder.append(newOperandField);
+        //stringBuilder.append(newOperandField);
     }
 
     public static void addParenthesis(ActionEvent e) { //todo
@@ -198,7 +199,7 @@ public class Calculator extends JFrame {
 
     private static boolean isLastCharacterOperator(String resultToString) {
         char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
-        return String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString()) && String.valueOf(lastCharacterOfResult).charAt(0) != '(' && String.valueOf(lastCharacterOfResult).charAt(0) != ')';
+        return String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString()); //&& String.valueOf(lastCharacterOfResult).charAt(0) != '(' && String.valueOf(lastCharacterOfResult).charAt(0) != ')';
     }
 
 }
