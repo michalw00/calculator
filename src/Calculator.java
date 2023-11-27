@@ -133,6 +133,10 @@ public class Calculator extends JFrame {
 
     }
 
+
+
+
+
     public static void numbers(ActionEvent e) {
         String actionCommand = e.getActionCommand();
 
@@ -162,14 +166,14 @@ public class Calculator extends JFrame {
 
     public static void sum() { //todo
         String resultToString = resultField.getText();
-        if (isLastCharacterOperator(resultToString)) {
-            return;
-        }
+        //if (isLastCharacterOperator(resultToString)) return;
+
         String operandFieldText = operandField.getText();
         if (lastOperator.charAt(0) == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
             operandField.setText("ERROR: Division by zero!");
             return;
         }
+
         resultToString += operandFieldText;
         String newOperandField = Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
         operandField.setText("");
@@ -182,7 +186,8 @@ public class Calculator extends JFrame {
 
     public static void addParenthesis(ActionEvent e) {
         String actionCommand = e.getActionCommand();
-        stringBuilder.append(actionCommand);
+        stringBuilder.append(operandField.getText()).append(actionCommand);
+        operandField.setText("");
         resultField.setText(stringBuilder.toString());
     }
 
@@ -190,4 +195,5 @@ public class Calculator extends JFrame {
         char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
         return String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString()) && String.valueOf(lastCharacterOfResult).charAt(0) != '(' && String.valueOf(lastCharacterOfResult).charAt(0) != ')';
     }
+
 }
