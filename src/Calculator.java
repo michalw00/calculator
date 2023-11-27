@@ -13,7 +13,7 @@ public class Calculator extends JFrame {
     public static JTextField resultField;
     public static JTextField operandField;
     public static double resultValue = 0.0;
-    public static String lastOperator; // need to clear this on reset
+    public static Character lastOperator; // need to clear this on reset
 
 
 
@@ -157,7 +157,7 @@ public class Calculator extends JFrame {
             operand = operandField.getText();
         }
 
-        lastOperator = actionCommand;
+        lastOperator = actionCommand.charAt(0);
         stringBuilder.append(operand).append(actionCommand);
         operandField.setText("");
         resultField.setText(stringBuilder.toString());
@@ -169,7 +169,7 @@ public class Calculator extends JFrame {
         //if (isLastCharacterOperator(resultToString)) return;
 
         String operandFieldText = operandField.getText();
-        if (lastOperator.charAt(0) == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
+        if (lastOperator == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
             operandField.setText("ERROR: Division by zero!");
             return;
         }
@@ -184,8 +184,12 @@ public class Calculator extends JFrame {
         stringBuilder.append(newOperandField);
     }
 
-    public static void addParenthesis(ActionEvent e) {
+    public static void addParenthesis(ActionEvent e) { //todo
+        if (lastOperator != null && (lastOperator == '(' || lastOperator == ')') ) return;
+
         String actionCommand = e.getActionCommand();
+        lastOperator = actionCommand.charAt(0);
+
         stringBuilder.append(operandField.getText()).append(actionCommand);
         operandField.setText("");
         resultField.setText(stringBuilder.toString());
