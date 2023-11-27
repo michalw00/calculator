@@ -33,7 +33,7 @@ public class Calculator extends JFrame {
         // result panel
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new FlowLayout());
-        resultField = new JTextField("Result: "+ resultValue, NUMBER_OF_DIGITS);
+        resultField = new JTextField("Result: "+resultValue, NUMBER_OF_DIGITS);
         resultField.setBackground(Color.WHITE);
         textPanel.add(resultField);
         add(textPanel, BorderLayout.NORTH);
@@ -165,15 +165,16 @@ public class Calculator extends JFrame {
     }
 
     public static void sum() { //todo
-        String resultToString = resultField.getText();
-        //if (isLastCharacterOperator(resultToString)) return;
+        if (lastOperator == null || lastOperator == '=') return;
 
         String operandFieldText = operandField.getText();
         if (lastOperator == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
             operandField.setText("ERROR: Division by zero!");
             return;
         }
+        lastOperator = '=';
 
+        String resultToString = resultField.getText();
         resultToString += operandFieldText;
         String newOperandField = Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
         operandField.setText("");
