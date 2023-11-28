@@ -30,26 +30,34 @@ public class Calculator extends JFrame {
         setLayout(new BorderLayout());
         for (int i = 0; i <= 9; i++) NUMBERS.add(i);
 
-        // result panel
+        initializeResultPanel();
+        initializeInputPanel();
+        initializeButtonGrid();
+    }
+
+    private void initializeResultPanel() {
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new FlowLayout());
+
         resultField = new JTextField("Result: "+resultValue, NUMBER_OF_DIGITS);
         resultField.setBackground(Color.WHITE);
         textPanel.add(resultField);
         add(textPanel, BorderLayout.NORTH);
-
-        // input panel
+    }
+    private void initializeInputPanel() {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new FlowLayout());
+
         operandField = new JTextField(NUMBER_OF_DIGITS);
         operandField.setBackground(Color.WHITE);
         inputPanel.add(operandField);
         add(inputPanel, BorderLayout.CENTER);
-
-        // button grid
+    }
+    private void initializeButtonGrid() {
         JPanel buttonPanel = new JPanel();
         GridLayout chosenLayout = new GridLayout(5, 4);
         buttonPanel.setLayout(chosenLayout);
+
         JButton zero = new JButton("0");
         JButton one = new JButton("1");
         JButton two = new JButton("2");
@@ -89,26 +97,27 @@ public class Calculator extends JFrame {
         decimalPoint.addActionListener(newOperationListener);
         equals.addActionListener(newSumListener);
 
-
+        // row I
         buttonPanel.add(seven);
         buttonPanel.add(eight);
         buttonPanel.add(nine);
         buttonPanel.add(divide);
+
+        // row II
         buttonPanel.add(four);
         buttonPanel.add(five);
         buttonPanel.add(six);
         buttonPanel.add(multiply);
 
+        // row III
         buttonPanel.add(one);
         buttonPanel.add(two);
         buttonPanel.add(three);
         buttonPanel.add(minus);
 
+        // row IV
         buttonPanel.add(decimalPoint);
         buttonPanel.add(zero);
-
-
-
         JButton reset = new JButton("Reset");
         JButton clear = new JButton("Clear");
         reset.addActionListener(e -> {
@@ -123,6 +132,8 @@ public class Calculator extends JFrame {
         rightBracket.addActionListener(newParenthesisListener);
         buttonPanel.add(equals);
         buttonPanel.add(plus);
+
+        // row V
         buttonPanel.add(reset);
         buttonPanel.add(clear);
         buttonPanel.add(leftBracket);
@@ -130,7 +141,6 @@ public class Calculator extends JFrame {
 
 
         add(buttonPanel, BorderLayout.SOUTH);
-
     }
 
 
@@ -146,18 +156,12 @@ public class Calculator extends JFrame {
 
     }
 
-    public static void operations(ActionEvent e) { // todo
+    public static void operations(ActionEvent e) {
         if (isLastCharacterOperator(resultField.getText())) return;
+
 
         String actionCommand = e.getActionCommand();
         lastOperator = actionCommand.charAt(0);
-
-        //String operand;
-        //if (isLastCharacterOperator(resultField.getText()) && !stringBuilder.isEmpty()) {
-        //    operand = "";
-        //} else {
-        //    operand = operandField.getText();
-        //}
 
         stringBuilder.append(operandField.getText()).append(actionCommand);
         operandField.setText("");
@@ -165,8 +169,9 @@ public class Calculator extends JFrame {
 
     }
 
-    public static void sum() { //todo
+    public static void sum() {
         if (lastOperator == null || lastOperator == '=') return;
+
 
         String operandFieldText = operandField.getText();
         if (lastOperator == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
@@ -183,11 +188,11 @@ public class Calculator extends JFrame {
         resultField.setText(resultField.getText()+operandFieldText+"=");
         operandField.setText(newOperandField);
         stringBuilder.setLength(0);
-        //stringBuilder.append(newOperandField);
     }
 
-    public static void addParenthesis(ActionEvent e) { //todo
+    public static void addParenthesis(ActionEvent e) {
         if (lastOperator != null && (lastOperator == '(' || lastOperator == ')') ) return;
+
 
         String actionCommand = e.getActionCommand();
         lastOperator = actionCommand.charAt(0);
