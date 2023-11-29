@@ -1,9 +1,8 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
 
 public class ActionListeners {
-
-
 
 
 	public static class NumberListener implements ActionListener {
@@ -18,17 +17,23 @@ public class ActionListeners {
 	}
 	public static class OperationListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			Calculator.operations(e);
-		}
-	}
-	public static class SumListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			Calculator.sum();
-		}
-	}
-	public static class ParenthesisListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			Calculator.addParenthesis(e);
+			String actionCommand = e.getActionCommand();
+
+			if (actionCommand.matches("[+\\-*/]") ) {
+				Calculator.operations(actionCommand);
+				return;
+			}
+
+			if (actionCommand.charAt(0) == '(' || actionCommand.charAt(0) == ')') {
+				Calculator.addParenthesis(actionCommand);
+				return;
+			}
+
+			if (actionCommand.charAt(0) == '=' ) {
+				Calculator.sum();
+				return;
+			}
+
 		}
 	}
 

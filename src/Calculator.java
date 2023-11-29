@@ -39,7 +39,7 @@ public class Calculator extends JFrame {
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new FlowLayout());
 
-        resultField = new JTextField("Result: "+resultValue, NUMBER_OF_DIGITS);
+        resultField = new JTextField(Double.toString(resultValue), NUMBER_OF_DIGITS);
         resultField.setBackground(Color.WHITE);
         textPanel.add(resultField);
         add(textPanel, BorderLayout.NORTH);
@@ -76,10 +76,12 @@ public class Calculator extends JFrame {
         JButton equals = new JButton("=");
         JButton leftBracket = new JButton("(");
         JButton rightBracket = new JButton(")");
-        ActionListeners.NumberListener newNumberListener = new ActionListeners.NumberListener();
-        ActionListeners.OperationListener newOperationListener = new ActionListeners.OperationListener();
-        ActionListeners.SumListener newSumListener = new ActionListeners.SumListener();
-        ActionListeners.ParenthesisListener newParenthesisListener = new ActionListeners.ParenthesisListener();
+
+        ActionListeners.NumberListener newNumberListener =
+                new ActionListeners.NumberListener();
+        ActionListeners.OperationListener newOperationListener =
+                new ActionListeners.OperationListener();
+
         zero.addActionListener(newNumberListener);
         one.addActionListener(newNumberListener);
         two.addActionListener(newNumberListener);
@@ -95,7 +97,7 @@ public class Calculator extends JFrame {
         plus.addActionListener(newOperationListener);
         minus.addActionListener(newOperationListener);
         decimalPoint.addActionListener(newOperationListener);
-        equals.addActionListener(newSumListener);
+        equals.addActionListener(newOperationListener);
 
         // row I
         buttonPanel.add(seven);
@@ -127,9 +129,12 @@ public class Calculator extends JFrame {
             stringBuilder.setLength(0);
             lastOperator = null;
         });
-        clear.addActionListener(e -> operandField.setText(""));
-        leftBracket.addActionListener(newParenthesisListener);
-        rightBracket.addActionListener(newParenthesisListener);
+        clear.addActionListener(e -> {
+            if (lastOperator != null && lastOperator != '=')
+                operandField.setText("");
+        });
+        leftBracket.addActionListener(newOperationListener);
+        rightBracket.addActionListener(newOperationListener);
         buttonPanel.add(equals);
         buttonPanel.add(plus);
 
@@ -156,11 +161,11 @@ public class Calculator extends JFrame {
 
     }
 
-    public static void operations(ActionEvent e) {
-        if (isLastCharacterOperator(resultField.getText())) return;
+    public static void operations(String actionCommand) {
+        String temp = resultField.getText();
+        if (isLastCharacterOperator(temp) || (Double.parseDouble(temp) == 0.0 && operandField.getText().trim().isEmpty()) ) return;
 
 
-        String actionCommand = e.getActionCommand();
         lastOperator = actionCommand.charAt(0);
 
         stringBuilder.append(operandField.getText()).append(actionCommand);
@@ -190,11 +195,9 @@ public class Calculator extends JFrame {
         stringBuilder.setLength(0);
     }
 
-    public static void addParenthesis(ActionEvent e) {
+    public static void addParenthesis(String actionCommand) {
         if (lastOperator != null && (lastOperator == '(' || lastOperator == ')') ) return;
 
-
-        String actionCommand = e.getActionCommand();
         lastOperator = actionCommand.charAt(0);
 
         stringBuilder.append(operandField.getText()).append(actionCommand);
