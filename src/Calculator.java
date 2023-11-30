@@ -4,15 +4,11 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public class Calculator extends JFrame {
-    public static final int WIDTH = 300;
-    public static final int HEIGHT = 230;
-    public static final int NUMBER_OF_DIGITS = 20;
+    public static final int WIDTH = 300, HEIGHT = 230, NUMBER_OF_DIGITS = 20;
     public static final ArrayList<Integer> NUMBERS = new ArrayList<>();
 
     public static StringBuilder stringBuilder = new StringBuilder();
-    public static JTextField resultField;
-    public static JTextField operandField;
-    public static double resultValue = 0.0;
+    public static JTextField resultField, operandField;
     public static Character lastOperator;
 
 
@@ -39,7 +35,7 @@ public class Calculator extends JFrame {
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new FlowLayout());
 
-        resultField = new JTextField(Double.toString(resultValue), NUMBER_OF_DIGITS);
+        resultField = new JTextField("", NUMBER_OF_DIGITS);
         resultField.setBackground(Color.WHITE);
         textPanel.add(resultField);
         add(textPanel, BorderLayout.NORTH);
@@ -123,8 +119,7 @@ public class Calculator extends JFrame {
         JButton reset = new JButton("Reset");
         JButton clear = new JButton("Clear");
         reset.addActionListener(e -> {
-            resultValue = 0.0;
-            resultField.setText("0.0");
+            resultField.setText("");
             operandField.setText("");
             stringBuilder.setLength(0);
             lastOperator = null;
@@ -158,12 +153,11 @@ public class Calculator extends JFrame {
         if (NUMBERS.contains(Integer.parseInt(actionCommand))) {
             operandField.setText(operandField.getText()+actionCommand);
         }
-
     }
 
     public static void operations(String actionCommand) {
         String temp = resultField.getText();
-        if (isLastCharacterOperator(temp) || (Double.parseDouble(temp) == 0.0 && operandField.getText().trim().isEmpty()) ) return;
+        //if (isLastCharacterOperator(temp) || (Double.parseDouble(temp) == 0.0 && operandField.getText().trim().isEmpty()) ) return; //todo. Double.parseDouble(temp) throws an error if there is parenthesis present
 
 
         lastOperator = actionCommand.charAt(0);
@@ -171,7 +165,6 @@ public class Calculator extends JFrame {
         stringBuilder.append(operandField.getText()).append(actionCommand);
         operandField.setText("");
         resultField.setText(stringBuilder.toString());
-
     }
 
     public static void sum() {
@@ -195,19 +188,36 @@ public class Calculator extends JFrame {
         stringBuilder.setLength(0);
     }
 
-    public static void addParenthesis(String actionCommand) {
-        if (lastOperator != null && (lastOperator == '(' || lastOperator == ')') ) return;
+    public static void parenthesis(String actionCommand) { // todo
+        // if (actionCommand is ')' and there is no '(' in result field) return; //todo
 
         lastOperator = actionCommand.charAt(0);
 
-        stringBuilder.append(operandField.getText()).append(actionCommand);
+        String temp = operandField.getText();
+        if () { // if (result field is not empty and last character is a number, or right parenthesis) append multiplication symbol;
+            stringBuilder.append(operandField.getText()).append('*').append(actionCommand);
+        } else stringBuilder.append(operandField.getText()).append(actionCommand);
+
         operandField.setText("");
         resultField.setText(stringBuilder.toString());
     }
 
+    //---helper methods---
     private static boolean isLastCharacterOperator(String resultToString) {
+        if (isResultFieldEmpty())
+            return false;
         char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
-        return String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString()); //&& String.valueOf(lastCharacterOfResult).charAt(0) != '(' && String.valueOf(lastCharacterOfResult).charAt(0) != ')';
+        return String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString());
     }
-
+    private static boolean isResultFieldEmpty() {
+        return resultField.getText().trim().isEmpty();
+    }
+    private static boolean isOperandFieldEmpty() {
+        return operandField.getText().trim().isEmpty();
+    }
+    private static void updateResultFieldWithChar(char characterToAppend) {
+        stringBuilder.append(characterToAppend);
+        resultField.setText(stringBuilder.toString());
+    }
+    //---------------------
 }

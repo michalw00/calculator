@@ -1,6 +1,5 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.Pattern;
 
 public class ActionListeners {
 
@@ -25,7 +24,7 @@ public class ActionListeners {
 			}
 
 			if (actionCommand.charAt(0) == '(' || actionCommand.charAt(0) == ')') {
-				Calculator.addParenthesis(actionCommand);
+				Calculator.parenthesis(actionCommand);
 				return;
 			}
 
