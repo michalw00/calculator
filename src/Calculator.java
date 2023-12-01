@@ -190,11 +190,13 @@ public class Calculator extends JFrame {
 
     public static void parenthesis(String actionCommand) { // todo
         // if (actionCommand is ')' and there is no '(' in result field) return; //todo
+        String unsignedDouble = "(\\d+\\.?\\d*|\\.\\d+([Ee][-+]?\\d+)?)";
 
         lastOperator = actionCommand.charAt(0);
 
         String temp = operandField.getText();
-        if () { // if (result field is not empty and last character is a number, or right parenthesis) append multiplication symbol;
+        String temp2 = resultField.getText();
+        if (!isResultFieldEmpty() && !temp.matches(unsignedDouble)) { // if (result field is not empty and last character is a number, or right parenthesis) append multiplication symbol; // <- scratch that
             stringBuilder.append(operandField.getText()).append('*').append(actionCommand);
         } else stringBuilder.append(operandField.getText()).append(actionCommand);
 
