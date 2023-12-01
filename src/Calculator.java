@@ -194,9 +194,20 @@ public class Calculator extends JFrame {
 
         lastOperator = actionCommand.charAt(0);
 
-        String temp = operandField.getText();
-        String temp2 = resultField.getText();
-        if (!isResultFieldEmpty() && !temp.matches(unsignedDouble)) { // if (result field is not empty and last character is a number, or right parenthesis) append multiplication symbol; // <- scratch that
+        String tempOperand = operandField.getText();
+        String tempResult = resultField.getText();
+
+        //  Condition 1:
+        // If either the result field or operand field is not empty,
+        // and the current operand is a valid double and not a closing parenthesis.
+        boolean multiplicationCondition1 = (!isResultFieldEmpty() || !isOperandFieldEmpty()) &&
+                (tempOperand.matches(unsignedDouble) && actionCommand.charAt(0) != ')');
+        //  Condition 2:
+        // If the operand field is empty, the result field is not empty,
+        // the current action is an opening parenthesis, and the last character of the result is not an opening parenthesis.
+        boolean multiplicationCondition2 = (isOperandFieldEmpty() && !isResultFieldEmpty() &&
+                actionCommand.charAt(0) == '(' && tempResult.charAt(tempResult.length() - 1) != '(');
+        if (multiplicationCondition1 || multiplicationCondition2) {
             stringBuilder.append(operandField.getText()).append('*').append(actionCommand);
         } else stringBuilder.append(operandField.getText()).append(actionCommand);
 
