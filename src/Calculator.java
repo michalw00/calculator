@@ -180,7 +180,8 @@ public class Calculator extends JFrame {
 
         String resultToString = resultField.getText();
         resultToString += operandFieldText;
-        String newOperandField = Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
+        String newOperandField =
+                Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
         operandField.setText("");
 
         resultField.setText(resultField.getText()+operandFieldText+"=");
