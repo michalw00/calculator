@@ -35,8 +35,11 @@ public class ActionListeners {
 
 		}
 	}
-
-
+	public static class TrigonometryListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// todo
+		}
+	}
 
 
 }

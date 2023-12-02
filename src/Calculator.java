@@ -1,18 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class Calculator extends JFrame {
-    public static final int WIDTH = 300, HEIGHT = 230, NUMBER_OF_DIGITS = 20;
+    public static final Pattern UNSIGNED_DOUBLE = Pattern.compile("(\\d+\\.?\\d*|\\.\\d+([Ee][-+]?\\d+)?)");
+    public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
+    public static final Pattern OPERATOR = Pattern.compile("[+\\-*/]");
+
+    public static final int WIDTH = 600, HEIGHT = 230, NUMBER_OF_DIGITS = 20;
     public static final ArrayList<Integer> NUMBERS = new ArrayList<>();
 
     public static StringBuilder stringBuilder = new StringBuilder();
     public static JTextField resultField, operandField;
     public static Character lastOperator;
     public static boolean errorState = false;
-
-
 
 
     public static void main(String[] args) {
@@ -30,6 +34,7 @@ public class Calculator extends JFrame {
         initializeResultPanel();
         initializeInputPanel();
         initializeButtonGrid();
+        initializeTrigonometryPanel();
     }
 
     private void initializeResultPanel() {
@@ -50,96 +55,64 @@ public class Calculator extends JFrame {
         inputPanel.add(operandField);
         add(inputPanel, BorderLayout.CENTER);
     }
+    private void initializeTrigonometryPanel() { // todo: add constructor for these kind of panels maybe? So something like makeNewPanel(5 rows, 4 columns, String[] arrayContainingButtonLabels)
+        JPanel trigonometryPanel = new JPanel();
+        GridLayout chosenLayout = new GridLayout(1, 3);
+        trigonometryPanel.setLayout(chosenLayout);
+        JButton sin = new JButton("sin");
+        JButton cos = new JButton("cos");
+        JButton tan = new JButton("tan");
+
+        ActionListeners.TrigonometryListener newTrigonometryFunctionListener =
+                new ActionListeners.TrigonometryListener();
+
+        sin.addActionListener(newTrigonometryFunctionListener);
+        cos.addActionListener(newTrigonometryFunctionListener);
+        tan.addActionListener(newTrigonometryFunctionListener);
+
+        trigonometryPanel.add(sin);
+        trigonometryPanel.add(cos);
+        trigonometryPanel.add(tan);
+        add(trigonometryPanel, BorderLayout.EAST);
+    }
     private void initializeButtonGrid() {
         JPanel buttonPanel = new JPanel();
         GridLayout chosenLayout = new GridLayout(5, 4);
         buttonPanel.setLayout(chosenLayout);
 
-        JButton zero = new JButton("0");
-        JButton one = new JButton("1");
-        JButton two = new JButton("2");
-        JButton three = new JButton("3");
-        JButton four = new JButton("4");
-        JButton five = new JButton("5");
-        JButton six = new JButton("6");
-        JButton seven = new JButton("7");
-        JButton eight = new JButton("8");
-        JButton nine = new JButton("9");
-        JButton multiply = new JButton("*");
-        JButton divide = new JButton("/");
-        JButton plus = new JButton("+");
-        JButton minus = new JButton("-");
-        JButton decimalPoint = new JButton(".");
-        JButton equals = new JButton("=");
-        JButton leftBracket = new JButton("(");
-        JButton rightBracket = new JButton(")");
+        String[] buttonLabels =
+                {"7", "8", "9", "/",
+                "4", "5", "6", "*",
+                "1", "2", "3", "-",
+                ".", "0", "=", "+",
+                "RESET", "CLEAR", "(", ")"};
 
-        ActionListeners.NumberListener newNumberListener =
-                new ActionListeners.NumberListener();
-        ActionListeners.OperationListener newOperationListener =
-                new ActionListeners.OperationListener();
-
-        zero.addActionListener(newNumberListener);
-        one.addActionListener(newNumberListener);
-        two.addActionListener(newNumberListener);
-        three.addActionListener(newNumberListener);
-        four.addActionListener(newNumberListener);
-        five.addActionListener(newNumberListener);
-        six.addActionListener(newNumberListener);
-        seven.addActionListener(newNumberListener);
-        eight.addActionListener(newNumberListener);
-        nine.addActionListener(newNumberListener);
-        multiply.addActionListener(newOperationListener);
-        divide.addActionListener(newOperationListener);
-        plus.addActionListener(newOperationListener);
-        minus.addActionListener(newOperationListener);
-        decimalPoint.addActionListener(newOperationListener);
-        equals.addActionListener(newOperationListener);
-
-        // row I
-        buttonPanel.add(seven);
-        buttonPanel.add(eight);
-        buttonPanel.add(nine);
-        buttonPanel.add(divide);
-
-        // row II
-        buttonPanel.add(four);
-        buttonPanel.add(five);
-        buttonPanel.add(six);
-        buttonPanel.add(multiply);
-
-        // row III
-        buttonPanel.add(one);
-        buttonPanel.add(two);
-        buttonPanel.add(three);
-        buttonPanel.add(minus);
-
-        // row IV
-        buttonPanel.add(decimalPoint);
-        buttonPanel.add(zero);
-        JButton reset = new JButton("Reset");
-        JButton clear = new JButton("Clear");
-        reset.addActionListener(e -> {
-            resultField.setText("");
-            operandField.setText("");
-            stringBuilder.setLength(0);
-            lastOperator = null;
-        });
-        clear.addActionListener(e -> {
-            if (lastOperator != null && lastOperator != '=')
-                operandField.setText("");
-        });
-        leftBracket.addActionListener(newOperationListener);
-        rightBracket.addActionListener(newOperationListener);
-        buttonPanel.add(equals);
-        buttonPanel.add(plus);
-
-        // row V
-        buttonPanel.add(reset);
-        buttonPanel.add(clear);
-        buttonPanel.add(leftBracket);
-        buttonPanel.add(rightBracket);
-
+        for (String label : buttonLabels) {
+            char charAt0 = label.charAt(0);
+            switch (charAt0) {
+                case 'R':
+                    addButton(buttonPanel, label, (e -> {
+                        resultField.setText("");
+                        operandField.setText("");
+                        stringBuilder.setLength(0);
+                        lastOperator = null;
+                    }));
+                    break;
+                case 'C':
+                    addButton(buttonPanel, label, (e -> {
+                        if (lastOperator != null && lastOperator != '=')
+                            operandField.setText("");
+                    }));
+                    break;
+                default:
+                    if (Character.isDigit(charAt0)) {
+                        addButton(buttonPanel, label, new ActionListeners.NumberListener());
+                        break;
+                    } else
+                        addButton(buttonPanel, label, new ActionListeners.OperationListener());
+                    break;
+            }
+        }
 
         add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -147,7 +120,7 @@ public class Calculator extends JFrame {
 
 
 
-
+    //---event handlers---
     public static void numbers(ActionEvent e) {
         String actionCommand = e.getActionCommand();
 
@@ -222,6 +195,8 @@ public class Calculator extends JFrame {
         operandField.setText("");
         resultField.setText(stringBuilder.toString());
     }
+    //--------------------
+
 
     //---helper methods---
     private static boolean isLastCharacterOperator(String resultToString) {
@@ -230,15 +205,24 @@ public class Calculator extends JFrame {
         char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
         return String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString());
     }
+
     private static boolean isResultFieldEmpty() {
         return resultField.getText().trim().isEmpty();
     }
+
     private static boolean isOperandFieldEmpty() {
         return operandField.getText().trim().isEmpty();
     }
+
     private static void updateResultFieldWithChar(char characterToAppend) {
         stringBuilder.append(characterToAppend);
         resultField.setText(stringBuilder.toString());
     }
-    //---------------------
+
+    private static void addButton(Container container, String label, ActionListener actionListener) {
+        JButton button = new JButton(label);
+        button.addActionListener(actionListener);
+        container.add(button);
+    }
+    //--------------------
 }
