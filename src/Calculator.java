@@ -10,6 +10,7 @@ public class Calculator extends JFrame {
     public static StringBuilder stringBuilder = new StringBuilder();
     public static JTextField resultField, operandField;
     public static Character lastOperator;
+    public static boolean errorState = false;
 
 
 
@@ -150,6 +151,11 @@ public class Calculator extends JFrame {
     public static void numbers(ActionEvent e) {
         String actionCommand = e.getActionCommand();
 
+        if (errorState) {
+            operandField.setText("");
+            errorState = false;
+        }
+
         if (NUMBERS.contains(Integer.parseInt(actionCommand))) {
             operandField.setText(operandField.getText()+actionCommand);
         }
@@ -174,6 +180,7 @@ public class Calculator extends JFrame {
         String operandFieldText = operandField.getText();
         if (lastOperator == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
             operandField.setText("ERROR: Division by zero!");
+            errorState = true;
             return;
         }
         lastOperator = '=';
