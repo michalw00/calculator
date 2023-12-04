@@ -3,14 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 public class Calculator extends JFrame {
-    public static final Pattern UNSIGNED_DOUBLE = Pattern.compile("(\\d+\\.?\\d*|\\.\\d+([Ee][-+]?\\d+)?)");
-    public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
-    public static final Pattern OPERATOR = Pattern.compile("[+\\-*/]");
-
-    public static final int WIDTH = 600, HEIGHT = 230, NUMBER_OF_DIGITS = 20;
+    public static final int WIDTH = 420, HEIGHT = 250, NUMBER_OF_DIGITS = 30;
     public static final ArrayList<Integer> NUMBERS = new ArrayList<>();
 
     public static StringBuilder stringBuilder = new StringBuilder();
@@ -28,13 +23,14 @@ public class Calculator extends JFrame {
         super("Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
+        setResizable(false);
         setLayout(new BorderLayout());
         for (int i = 0; i <= 9; i++) NUMBERS.add(i);
 
         initializeResultPanel();
         initializeInputPanel();
         initializeButtonGrid();
-        initializeTrigonometryPanel();
+        initializeMenu();
     }
 
     private void initializeResultPanel() {
@@ -43,6 +39,8 @@ public class Calculator extends JFrame {
 
         resultField = new JTextField("", NUMBER_OF_DIGITS);
         resultField.setBackground(Color.WHITE);
+        resultField.setEditable(false);
+        resultField.setBackground(new Color(223, 223, 223));
         textPanel.add(resultField);
         add(textPanel, BorderLayout.NORTH);
     }
@@ -50,47 +48,27 @@ public class Calculator extends JFrame {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new FlowLayout());
 
-        operandField = new JTextField(NUMBER_OF_DIGITS);
-        operandField.setBackground(Color.WHITE);
+        operandField = new JTextField(NUMBER_OF_DIGITS/2);
+        operandField.setEditable(false);
         inputPanel.add(operandField);
         add(inputPanel, BorderLayout.CENTER);
     }
-    private void initializeTrigonometryPanel() { // todo: add constructor for these kind of panels maybe? So something like makeNewPanel(5 rows, 4 columns, String[] arrayContainingButtonLabels)
-        JPanel trigonometryPanel = new JPanel();
-        GridLayout chosenLayout = new GridLayout(1, 3);
-        trigonometryPanel.setLayout(chosenLayout);
-        JButton sin = new JButton("sin");
-        JButton cos = new JButton("cos");
-        JButton tan = new JButton("tan");
-
-        ActionListeners.TrigonometryListener newTrigonometryFunctionListener =
-                new ActionListeners.TrigonometryListener();
-
-        sin.addActionListener(newTrigonometryFunctionListener);
-        cos.addActionListener(newTrigonometryFunctionListener);
-        tan.addActionListener(newTrigonometryFunctionListener);
-
-        trigonometryPanel.add(sin);
-        trigonometryPanel.add(cos);
-        trigonometryPanel.add(tan);
-        add(trigonometryPanel, BorderLayout.EAST);
-    }
     private void initializeButtonGrid() {
         JPanel buttonPanel = new JPanel();
-        GridLayout chosenLayout = new GridLayout(5, 4);
+        GridLayout chosenLayout = new GridLayout(5, 5);
         buttonPanel.setLayout(chosenLayout);
 
         String[] buttonLabels =
-                {"7", "8", "9", "/",
-                "4", "5", "6", "*",
-                "1", "2", "3", "-",
-                ".", "0", "=", "+",
-                "RESET", "CLEAR", "(", ")"};
+                {"sin", "7", "8", "9", "/",
+                "cos", "4", "5", "6", "*",
+                "tan", "1", "2", "3", "-",
+                "π",".", "0", "=", "+",
+                "x\u00B2", "RESET", "CLEAR", "(", ")"};
 
         for (String label : buttonLabels) {
             char charAt0 = label.charAt(0);
-            switch (charAt0) {
-                case 'R':
+            switch (label) {
+                case "RESET":
                     addButton(buttonPanel, label, (e -> {
                         resultField.setText("");
                         operandField.setText("");
@@ -98,11 +76,21 @@ public class Calculator extends JFrame {
                         lastOperator = null;
                     }));
                     break;
-                case 'C':
+                case "CLEAR":
                     addButton(buttonPanel, label, (e -> {
                         if (lastOperator != null && lastOperator != '=')
                             operandField.setText("");
                     }));
+                    break;
+                case "π":
+                    addButton(buttonPanel, label, (e -> {
+                        handleErrorState();
+                        operandField.setText(operandField.getText()+Math.PI);
+                    }));
+                    break;
+                case "sin":
+                case "cos":
+                case "tan": // todo
                     break;
                 default:
                     if (Character.isDigit(charAt0)) {
@@ -110,11 +98,21 @@ public class Calculator extends JFrame {
                         break;
                     } else
                         addButton(buttonPanel, label, new ActionListeners.OperationListener());
-                    break;
+                        break;
             }
         }
 
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+    private void initializeMenu() {
+        JMenuBar bar = new JMenuBar();
+        JMenu dropdownMenu = new JMenu("Mode");
+
+        addMenuItem(dropdownMenu, "Standard", null);
+        addMenuItem(dropdownMenu, "Graphing", null);
+
+        bar.add(dropdownMenu);
+        setJMenuBar(bar);
     }
 
 
@@ -124,11 +122,7 @@ public class Calculator extends JFrame {
     public static void numbers(ActionEvent e) {
         String actionCommand = e.getActionCommand();
 
-        if (errorState) {
-            operandField.setText("");
-            errorState = false;
-        }
-
+        handleErrorState();
         if (NUMBERS.contains(Integer.parseInt(actionCommand))) {
             operandField.setText(operandField.getText()+actionCommand);
         }
@@ -223,6 +217,19 @@ public class Calculator extends JFrame {
         JButton button = new JButton(label);
         button.addActionListener(actionListener);
         container.add(button);
+    }
+
+    private static void addMenuItem(Container container, String label, ActionListener actionListener) {
+        JMenuItem menuItem = new JMenuItem(label);
+        menuItem.addActionListener(actionListener);
+        container.add(menuItem);
+    }
+
+    private static void handleErrorState() {
+        if (errorState) {
+            operandField.setText("");
+            errorState = false;
+        }
     }
     //--------------------
 }
