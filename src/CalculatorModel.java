@@ -34,10 +34,14 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 	}
 
 	public void performSum() {
-		if (calculatorState.getLastOperator() == null || calculatorState.getLastOperator() == '=') return;
-
+		if (calculatorState.getLastOperator() == null || calculatorState.getLastOperator() == '=')
+			return;
 
 		String operandFieldText = calculatorUI.getOperandField().getText();
+		String resultFieldText = calculatorUI.getResultField().getText();
+		if (String.valueOf(resultFieldText.charAt(resultFieldText.length() - 1)).matches("[+\\-*/]") && calculatorUI.getOperandField().getText().trim().isEmpty())
+			return;
+
 		if (calculatorState.getLastOperator() == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
 			calculatorUI.getOperandField().setText("ERROR: Division by zero!");
 			calculatorState.setErrorState(true);
