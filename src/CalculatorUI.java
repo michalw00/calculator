@@ -7,9 +7,6 @@ public class CalculatorUI implements Calculator.CalculatorView {
 	public Calculator calculator;
 	private final CalculatorState calculatorState;
 
-	public static StringBuilder stringBuilder = new StringBuilder();
-	public static Character lastOperator;
-
 	public CalculatorUI(Calculator calculator, CalculatorState calculatorState) {
 		this.calculator = calculator;
 		this.calculatorState = calculatorState;
@@ -59,22 +56,22 @@ public class CalculatorUI implements Calculator.CalculatorView {
 
 		for (String label : buttonLabels) {
 			char charAt0 = label.charAt(0);
-			switch (label) {
-				case "RESET":
+			switch (charAt0) {
+				case 'R':
 					addButton(buttonPanel, label, (e -> {
 						resultField.setText("");
 						operandField.setText("");
-						stringBuilder.setLength(0);
-						lastOperator = null;
+						calculatorState.getStringBuilder().setLength(0);
+						calculatorState.setLastOperator(null);
 					}));
 					break;
-				case "CLEAR":
+				case 'C':
 					addButton(buttonPanel, label, (e -> {
-						if (lastOperator != null && lastOperator != '=')
+						if (calculatorState.getLastOperator() != null && calculatorState.getLastOperator() != '=')
 							operandField.setText("");
 					}));
 					break;
-				case "π":
+				case 'π':
 					addButton(buttonPanel, label, (e -> {
 						calculatorState.handleErrorState();
 						operandField.setText(operandField.getText()+Math.PI);
