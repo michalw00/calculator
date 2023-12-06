@@ -16,15 +16,13 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		String actionCommand = e.getActionCommand();
 
 		calculatorState.handleErrorState();
-		if (calculator.NUMBERS.contains(Integer.parseInt(actionCommand))) {
+		if (Calculator.NUMBERS.contains(Integer.parseInt(actionCommand))) {
 			calculatorUI.getOperandField().setText(calculatorUI.getOperandField().getText()+actionCommand);
 		}
 	}
 
 	public void handleOperationInput(String actionCommand) {
 		String temp = calculatorUI.getResultField().getText();
-		//if (isLastCharacterOperator(temp) || (Double.parseDouble(temp) == 0.0 && operandField.getText().trim().isEmpty()) ) return; //todo. Double.parseDouble(temp) throws an error if there is parenthesis present
-
 
 		calculatorState.setLastOperator(actionCommand.charAt(0));
 
@@ -39,7 +37,8 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 
 		String operandFieldText = calculatorUI.getOperandField().getText();
 		String resultFieldText = calculatorUI.getResultField().getText();
-		if (String.valueOf(resultFieldText.charAt(resultFieldText.length() - 1)).matches("[+\\-*/]") && calculatorUI.getOperandField().getText().trim().isEmpty())
+		if (String.valueOf(resultFieldText.charAt(resultFieldText.length() - 1)).matches("[+\\-*/]")
+				&& calculatorUI.getOperandField().getText().trim().isEmpty())
 			return;
 
 		if (calculatorState.getLastOperator() == '/' && Math.abs(Double.parseDouble(operandFieldText)) < 1.0e-10) {
@@ -61,8 +60,7 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 	}
 
 	public void handleParenthesis(String actionCommand) {
-		// if (actionCommand is ')' and there is no '(' in result field) return;
-		String unsignedDouble = "(\\d+\\.?\\d*|\\.\\d+([Ee][-+]?\\d+)?)";
+		// todo: if (actionCommand is ')' and there is no '(' in result field) return;
 
 		calculatorState.setLastOperator(actionCommand.charAt(0));
 
@@ -72,6 +70,7 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		//  Condition 1:
 		// If either the result field or operand field is not empty,
 		// and the current operand is a valid double and not a closing parenthesis.
+		String unsignedDouble = "(\\d+\\.?\\d*|\\.\\d+([Ee][-+]?\\d+)?)";
 		boolean multiplicationCondition1 = (!isResultFieldEmpty() || !isOperandFieldEmpty()) &&
 				(tempOperand.matches(unsignedDouble) && actionCommand.charAt(0) != ')');
 		//  Condition 2:

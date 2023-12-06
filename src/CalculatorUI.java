@@ -117,8 +117,8 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		menuItem.addActionListener(actionListener);
 		container.add(menuItem);
 	}
-
 	//----------------
+
 	public JTextField getOperandField() {
 		return operandField;
 	}

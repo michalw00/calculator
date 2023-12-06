@@ -42,6 +42,7 @@ public class CustomStack<T> implements Iterable<T> {
 		elements[size] = item;
 		size++;
 	}
+
 	T pop() {
 		if (isEmpty()) {
 			throw new EmptyStackException();
@@ -51,18 +52,21 @@ public class CustomStack<T> implements Iterable<T> {
 		size--;
 		return item;
 	}
+
 	T peek() {
 		if (isEmpty()) {
 			throw new EmptyStackException();
 		}
 		return (T) elements[size - 1];
 	}
+
 	int size() {
 		return size;
 	}
 	boolean isEmpty() {
 		return size == 0;
 	}
+
 	T get(int i) {
 		return (T) elements[i];
 	}
