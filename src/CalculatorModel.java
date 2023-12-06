@@ -1,12 +1,17 @@
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 public class CalculatorModel implements Calculator.CalculatorOperations {
+	public static final ArrayList<Integer> NUMBERS = new ArrayList<>();
+
 	public Calculator calculator;
 	private final CalculatorState calculatorState;
 	private final CalculatorUI calculatorUI;
 
 
 	public CalculatorModel(Calculator calculator, CalculatorState calculatorState, CalculatorUI calculatorUI) {
+		for (int i = 0; i <= 9; i++) NUMBERS.add(i);
+
 		this.calculator = calculator;
 		this.calculatorState = calculatorState;
 		this.calculatorUI = calculatorUI;
@@ -16,14 +21,12 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		String actionCommand = e.getActionCommand();
 
 		calculatorState.handleErrorState();
-		if (Calculator.NUMBERS.contains(Integer.parseInt(actionCommand))) {
+		if (NUMBERS.contains(Integer.parseInt(actionCommand))) {
 			calculatorUI.getOperandField().setText(calculatorUI.getOperandField().getText()+actionCommand);
 		}
 	}
 
 	public void handleOperationInput(String actionCommand) {
-		String temp = calculatorUI.getResultField().getText();
-
 		calculatorState.setLastOperator(actionCommand.charAt(0));
 
 		calculatorState.getStringBuilder().append(calculatorUI.getOperandField().getText()).append(actionCommand);

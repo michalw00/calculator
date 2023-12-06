@@ -3,6 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class CalculatorUI implements Calculator.CalculatorView {
+	public static final int WIDTH = 420, HEIGHT = 250;
+	public static final int NUMBER_OF_DIGITS = 30;
+
 	public static JTextField resultField, operandField;
 	public Calculator calculator;
 	private final CalculatorState calculatorState;
@@ -14,6 +17,10 @@ public class CalculatorUI implements Calculator.CalculatorView {
 	}
 
 	public void initializeCalculatorUI() {
+		calculator.setSize(WIDTH, HEIGHT);
+		calculator.setResizable(false);
+		calculator.setLayout(new BorderLayout());
+
 		initializeResultPanel();
 		initializeInputPanel();
 		initializeButtonGrid();
@@ -24,7 +31,7 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new FlowLayout());
 
-		resultField = new JTextField("", Calculator.NUMBER_OF_DIGITS);
+		resultField = new JTextField("", NUMBER_OF_DIGITS);
 		resultField.setBackground(Color.WHITE);
 		resultField.setEditable(false);
 		resultField.setBackground(new Color(223, 223, 223));
@@ -36,7 +43,7 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		JPanel inputPanel = new JPanel();
 		inputPanel.setLayout(new FlowLayout());
 
-		operandField = new JTextField(Calculator.NUMBER_OF_DIGITS/2);
+		operandField = new JTextField(NUMBER_OF_DIGITS/2);
 		operandField.setEditable(false);
 		inputPanel.add(operandField);
 		calculator.add(inputPanel, BorderLayout.CENTER);
