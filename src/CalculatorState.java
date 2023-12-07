@@ -2,6 +2,7 @@ public class CalculatorState {
 	private StringBuilder stringBuilder;
 	private Character lastOperator;
 	private boolean errorState;
+	private boolean isGraphModeOn = false;
 
 	public CalculatorState() {
 		this.stringBuilder = new StringBuilder();
@@ -18,6 +19,14 @@ public class CalculatorState {
 
 
 
+
+	public void setGraphMode(boolean graphModeOn) {
+		isGraphModeOn = graphModeOn;
+	}
+
+	public boolean isGraphModeOn() {
+		return isGraphModeOn;
+	}
 
 	public StringBuilder getStringBuilder() {
 		return stringBuilder;

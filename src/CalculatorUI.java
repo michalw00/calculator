@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 public class CalculatorUI implements Calculator.CalculatorView {
 	public static final int WIDTH = 420, HEIGHT = 250;
 	public static final int NUMBER_OF_DIGITS = 30;
+	private GraphWindow graphWindow;
 
 	public static JTextField resultField, operandField;
 	public Calculator calculator;
@@ -105,8 +106,20 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		JMenuBar bar = new JMenuBar();
 		JMenu dropdownMenu = new JMenu("Mode");
 
-		addMenuItem(dropdownMenu, "Standard", null);
-		addMenuItem(dropdownMenu, "Graphing", null);
+		addMenuItem(dropdownMenu, "Standard", (e -> {
+
+			if (calculatorState.isGraphModeOn()) {
+				calculatorState.setGraphMode(false);
+				graphWindow.setVisible(false);
+			}
+		}));
+		addMenuItem(dropdownMenu, "Graphing", (e -> {
+			if (!calculatorState.isGraphModeOn()) {
+				calculatorState.setGraphMode(true);
+				graphWindow = new GraphWindow();
+				graphWindow.setVisible(true);
+			}
+		}));
 
 		bar.add(dropdownMenu);
 		calculator.setJMenuBar(bar);
@@ -132,5 +145,22 @@ public class CalculatorUI implements Calculator.CalculatorView {
 
 	public JTextField getResultField() {
 		return resultField;
+	}
+
+	public class GraphWindow extends JFrame {
+		public static final int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
+
+		public GraphWindow() {
+			super("Graph");
+			setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+			setResizable(false);
+			setDefaultCloseOperation(HIDE_ON_CLOSE);
+			getContentPane().setBackground(Color.WHITE);
+		}
+
+		public void paint(Graphics g) { // todo
+			super.paint(g);
+
+		}
 	}
 }
