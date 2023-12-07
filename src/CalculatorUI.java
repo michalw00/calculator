@@ -147,6 +147,10 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		return resultField;
 	}
 
+
+
+
+
 	public class GraphWindow extends JFrame {
 		public static final int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
 
@@ -154,13 +158,23 @@ public class CalculatorUI implements Calculator.CalculatorView {
 			super("Graph");
 			setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 			setResizable(false);
-			setDefaultCloseOperation(HIDE_ON_CLOSE);
+			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			getContentPane().setBackground(Color.WHITE);
 		}
 
-		public void paint(Graphics g) { // todo
+		public void paint(Graphics g) {
 			super.paint(g);
 
+			// x-axis
+			g.drawLine(0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, WINDOW_HEIGHT / 2);
+
+			// y-axis
+			g.drawLine(WINDOW_WIDTH / 2, 0, WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+
+			// axis labels
+			g.drawString("X", WINDOW_WIDTH - 20, WINDOW_HEIGHT / 2 + 15);
+			g.drawString("Y", WINDOW_WIDTH / 2 + 5, 45);
 		}
 	}
+
 }
