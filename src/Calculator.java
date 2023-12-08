@@ -13,23 +13,34 @@ public class Calculator extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         CalculatorState calculatorState;
-        CalculatorUI calculatorUI;
+        StandardCalculatorUI standardCalculatorUI;
         CalculatorModel calculatorModel;
         ActionListeners actionListeners;
 
         calculatorState = new CalculatorState();
-        calculatorUI = new CalculatorUI(this, calculatorState);
-        calculatorModel = new CalculatorModel(this, calculatorState, calculatorUI);
+        standardCalculatorUI = new StandardCalculatorUI(this, calculatorState);
+        calculatorModel = new CalculatorModel(this, calculatorState, standardCalculatorUI);
         actionListeners = new ActionListeners(calculatorModel);
-
-
     }
 
+
+
+
     public interface CalculatorView {
-        void initializeResultPanel();
+        void initializeMenu();
+    }
+
+    public interface CalculatorMode extends CalculatorView {
         void initializeInputPanel();
         void initializeButtonGrid();
-        void initializeMenu();
+    }
+
+    public interface CalculatorStandardMode extends CalculatorMode {
+        void initializeResultPanel();
+    }
+
+    public interface CalculatorGraphingMode extends CalculatorMode {
+        // ...additional methods
     }
 
     public interface CalculatorOperations {
