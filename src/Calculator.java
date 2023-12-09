@@ -21,9 +21,9 @@ public class Calculator extends JFrame {
 
     public void reset(int newMode) {
         getContentPane().removeAll();
+        initialize(newMode);
         revalidate();
         repaint();
-        initialize(newMode);
     }
 
     private void initialize(int mode) {
