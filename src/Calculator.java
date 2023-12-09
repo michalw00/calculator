@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Calculator extends JFrame {
+    CalculatorState calculatorState;
+    CalculatorUI calculatorUI;
+    CalculatorModel calculatorModel;
+    ActionListeners actionListeners;
 
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
@@ -12,16 +16,30 @@ public class Calculator extends JFrame {
         super("Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        CalculatorState calculatorState;
-        StandardCalculatorUI standardCalculatorUI;
-        CalculatorModel calculatorModel;
-        ActionListeners actionListeners;
+        initialize(0);
+    }
 
+    public void reset(int newMode) {
+        getContentPane().removeAll();
+        revalidate();
+        repaint();
+        initialize(newMode);
+    }
+
+    private void initialize(int mode) {
         calculatorState = new CalculatorState();
-        standardCalculatorUI = new StandardCalculatorUI(this, calculatorState);
-        calculatorModel = new CalculatorModel(this, calculatorState, standardCalculatorUI);
+        switch (mode) {
+            case 0 -> calculatorUI = new StandardCalculatorUI(this, calculatorState);
+            case 1 -> calculatorUI = new GraphingCalculatorUI(this, calculatorState);
+            default -> {
+                System.err.println("This shouldn't have happened.");
+                System.exit(1);
+            }
+        }
+        calculatorModel = new CalculatorModel(this, calculatorState, calculatorUI);
         actionListeners = new ActionListeners(calculatorModel);
     }
+
 
 
 

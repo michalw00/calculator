@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class StandardCalculatorUI extends CalculatorUI implements Calculator.CalculatorStandardMode {
+public class StandardCalculatorUI extends CalculatorUI
+		implements Calculator.CalculatorStandardMode, Calculator.CalculatorMode {
 
 	public StandardCalculatorUI(Calculator calculator, CalculatorState calculatorState) {
 		super(calculator, calculatorState);
+		initializeCalculatorUI();
 	}
 
 	@Override
@@ -15,6 +17,7 @@ public class StandardCalculatorUI extends CalculatorUI implements Calculator.Cal
 		initializeButtonGrid();
 	}
 
+	@Override
 	public void initializeResultPanel() {
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new FlowLayout());
@@ -27,6 +30,7 @@ public class StandardCalculatorUI extends CalculatorUI implements Calculator.Cal
 		calculator.add(textPanel, BorderLayout.NORTH);
 	}
 
+	@Override
 	public void initializeButtonGrid() {
 		setButtonPanel(new JPanel());
 		GridLayout chosenLayout = new GridLayout(5, 5);

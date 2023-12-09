@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class CalculatorUI implements Calculator.CalculatorView {
+public abstract class CalculatorUI implements Calculator.CalculatorView {
 	private static final int WIDTH = 420, HEIGHT = 250;
 	public static final int DIGITS_LIMIT = 30;
 	public static final Color BACKGROUND_COLOR = new Color(223, 223, 223);
@@ -10,13 +10,9 @@ public class CalculatorUI implements Calculator.CalculatorView {
 
 	public static JTextField resultField, operandField;
 	public Calculator calculator;
-	private CalculatorState calculatorState;
-
-	private StandardCalculatorUI standardModeUI;
-	private GraphingCalculatorUI graphingModeUI;
+	private final CalculatorState calculatorState;
 
 	private JPanel buttonPanel;
-
 
 
 
@@ -27,14 +23,9 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		calculator.setSize(WIDTH, HEIGHT);
 		calculator.setResizable(false);
 		calculator.setLayout(new BorderLayout());
-
-		initializeCalculatorUI();
 	}
 
-	public void initializeCalculatorUI() {
-		initializeMenu();
-		initializeInputPanel();
-	}
+	public abstract void initializeCalculatorUI();
 
 	public void initializeInputPanel() {
 		JPanel inputPanel = new JPanel();
@@ -51,17 +42,15 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		JMenu dropdownMenu = new JMenu("Mode");
 
 		addMenuItem(dropdownMenu, "Standard", (e -> {
-
-			if (calculatorState.isGraphModeOn()) {
-				calculatorState.setGraphMode(false);
+			if (calculator.calculatorUI instanceof GraphingCalculatorUI) {
 				graphWindow.setVisible(false);
 			}
 		}));
 		addMenuItem(dropdownMenu, "Graphing", (e -> {
-			if (!calculatorState.isGraphModeOn()) {
-				calculatorState.setGraphMode(true);
+			if (!(calculator.calculatorUI instanceof GraphingCalculatorUI)) {
 				graphWindow = new GraphWindow();
 				graphWindow.setVisible(true);
+				calculator.reset(1);
 			}
 		}));
 
@@ -81,13 +70,7 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		menuItem.addActionListener(actionListener);
 		container.add(menuItem);
 	}
-
-	public void removeComponent(Component component) {
-		calculator.remove(component);
-		calculator.revalidate();
-		calculator.repaint();
-	}
-	//----------------
+	//--------------------
 
 	public JTextField getOperandField() {
 		return operandField;
@@ -97,24 +80,16 @@ public class CalculatorUI implements Calculator.CalculatorView {
 		return resultField;
 	}
 
+	public CalculatorState getCalculatorState() {
+		return calculatorState;
+	}
+
 	public JPanel getButtonPanel() {
 		return buttonPanel;
 	}
 
-	public static void setResultField(JTextField resultField) {
-		CalculatorUI.resultField = resultField;
-	}
-
-	public static void setOperandField(JTextField operandField) {
-		CalculatorUI.operandField = operandField;
-	}
-
 	public void setButtonPanel(JPanel buttonPanel) {
 		this.buttonPanel = buttonPanel;
-	}
-
-	public CalculatorState getCalculatorState() {
-		return calculatorState;
 	}
 
 	public class GraphWindow extends JFrame {
@@ -126,9 +101,6 @@ public class CalculatorUI implements Calculator.CalculatorView {
 			setResizable(false);
 			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			getContentPane().setBackground(Color.WHITE);
-
-			//removeComponent(buttonPanel);
-			graphingModeUI = new GraphingCalculatorUI(calculator, calculatorState);
 		}
 
 		public void paint(Graphics g) {

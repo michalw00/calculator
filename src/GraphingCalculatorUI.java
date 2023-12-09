@@ -1,9 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class GraphingCalculatorUI extends CalculatorUI implements Calculator.CalculatorGraphingMode { // todo
+public class GraphingCalculatorUI extends CalculatorUI
+		implements Calculator.CalculatorGraphingMode, Calculator.CalculatorMode {
+
 	public GraphingCalculatorUI(Calculator calculator, CalculatorState calculatorState) {
 		super(calculator, calculatorState);
+		initializeCalculatorUI();
 	}
 
 	@Override
@@ -13,6 +16,7 @@ public class GraphingCalculatorUI extends CalculatorUI implements Calculator.Cal
 		initializeButtonGrid();
 	}
 
+	@Override
 	public void initializeButtonGrid() { // todo
 		setButtonPanel(new JPanel());
 		GridLayout chosenLayout = new GridLayout(6, 5);
