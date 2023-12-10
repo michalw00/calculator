@@ -2,10 +2,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Calculator extends JFrame {
-    CalculatorState calculatorState;
-    CalculatorUI calculatorUI;
-    CalculatorModel calculatorModel;
-    ActionListeners actionListeners;
+    private CalculatorState calculatorState;
+    private CalculatorUI calculatorUI;
+    private CalculatorModel calculatorModel;
+    private ActionListeners actionListeners;
 
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
@@ -16,30 +16,8 @@ public class Calculator extends JFrame {
         super("Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        initialize(0);
+        CalculatorUI.initialize(this, 0);
     }
-
-    public void reset(int newMode) {
-        getContentPane().removeAll();
-        initialize(newMode);
-        revalidate();
-        repaint();
-    }
-
-    private void initialize(int mode) {
-        calculatorState = new CalculatorState();
-        switch (mode) {
-            case 0 -> calculatorUI = new StandardCalculatorUI(this, calculatorState);
-            case 1 -> calculatorUI = new GraphingCalculatorUI(this, calculatorState);
-            default -> {
-                System.err.println("This shouldn't have happened.");
-                System.exit(1);
-            }
-        }
-        calculatorModel = new CalculatorModel(this, calculatorState, calculatorUI);
-        actionListeners = new ActionListeners(calculatorModel);
-    }
-
 
 
 
@@ -58,7 +36,7 @@ public class Calculator extends JFrame {
     }
 
     public interface CalculatorGraphingMode extends CalculatorMode {
-        // ...additional methods
+        // todo: additional methods
     }
 
     public interface CalculatorOperations {
@@ -66,5 +44,42 @@ public class Calculator extends JFrame {
         void handleOperationInput(String actionCommand);
         void performSum();
         void handleParenthesis(String actionCommand);
+    }
+
+
+
+
+    //---boilerplate stuff---
+
+    public CalculatorState getCalculatorState() {
+        return calculatorState;
+    }
+
+    public CalculatorUI getCalculatorUI() {
+        return calculatorUI;
+    }
+
+    public CalculatorModel getCalculatorModel() {
+        return calculatorModel;
+    }
+
+    public ActionListeners getActionListeners() {
+        return actionListeners;
+    }
+
+    public void setCalculatorState(CalculatorState calculatorState) {
+        this.calculatorState = calculatorState;
+    }
+
+    public void setCalculatorUI(CalculatorUI calculatorUI) {
+        this.calculatorUI = calculatorUI;
+    }
+
+    public void setCalculatorModel(CalculatorModel calculatorModel) {
+        this.calculatorModel = calculatorModel;
+    }
+
+    public void setActionListeners(ActionListeners actionListeners) {
+        this.actionListeners = actionListeners;
     }
 }

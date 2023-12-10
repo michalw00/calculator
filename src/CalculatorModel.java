@@ -89,7 +89,11 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		calculatorUI.getResultField().setText(calculatorState.getStringBuilder().toString());
 	}
 
+
+
+
 	//---helper methods---
+
 	private boolean isResultFieldEmpty() {
 		return calculatorUI.getResultField().getText().trim().isEmpty();
 	}
@@ -98,10 +102,4 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		return calculatorUI.getOperandField().getText().trim().isEmpty();
 	}
 
-	private boolean isLastCharacterOperator(String resultToString) {
-		if (isResultFieldEmpty())
-			return false;
-		char lastCharacterOfResult = resultToString.charAt(resultToString.length() - 1);
-		return String.valueOf(lastCharacterOfResult).matches(InfixToPostfix.OPERATOR.toString());
-	}
 }

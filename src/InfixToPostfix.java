@@ -6,7 +6,6 @@ public class InfixToPostfix {
     public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
     public static final Pattern OPERATOR = Pattern.compile("[+\\-*/]");
 
-
     public static String infixToPostfix(String expression) {
         CustomStack<Character> stack = new CustomStack<>();
         Scanner scan = new Scanner(expression).useDelimiter("((?<=\\+)|(?=\\+)|(?<=-)|(?=-)|(?<=\\*)|(?=\\*)|(?<=/)|(?=/)|(?<=\\()|(?=\\)))");
@@ -142,10 +141,4 @@ public class InfixToPostfix {
 
     }
 
-
-
-
-    public static void main(String[] args) {
-        System.out.println("evaluatePostfix result: "+evaluatePostfix(infixToPostfix("2+2*2")));
-    }
 }

@@ -42,15 +42,15 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 		JMenu dropdownMenu = new JMenu("Mode");
 
 		addMenuItem(dropdownMenu, "Standard", (e -> {
-			if (calculator.calculatorUI instanceof GraphingCalculatorUI) {
+			if (calculator.getCalculatorUI() instanceof GraphingCalculatorUI) {
 				graphWindow.setVisible(false);
 			}
 		}));
 		addMenuItem(dropdownMenu, "Graphing", (e -> {
-			if (!(calculator.calculatorUI instanceof GraphingCalculatorUI)) {
+			if (!(calculator.getCalculatorUI() instanceof GraphingCalculatorUI)) {
 				graphWindow = new GraphWindow();
 				graphWindow.setVisible(true);
-				calculator.reset(1);
+				reset(calculator, 1);
 			}
 		}));
 
@@ -72,27 +72,7 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 	}
 	//--------------------
 
-	public JTextField getOperandField() {
-		return operandField;
-	}
-
-	public JTextField getResultField() {
-		return resultField;
-	}
-
-	public CalculatorState getCalculatorState() {
-		return calculatorState;
-	}
-
-	public JPanel getButtonPanel() {
-		return buttonPanel;
-	}
-
-	public void setButtonPanel(JPanel buttonPanel) {
-		this.buttonPanel = buttonPanel;
-	}
-
-	public class GraphWindow extends JFrame {
+	public static class GraphWindow extends JFrame {
 		public static final int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
 
 		public GraphWindow() {
@@ -116,6 +96,57 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 			g.drawString("X", WINDOW_WIDTH - 20, WINDOW_HEIGHT / 2 + 15);
 			g.drawString("Y", WINDOW_WIDTH / 2 + 5, 45);
 		}
+	}
+
+	//---UI utils---
+
+	public static void reset(Calculator calculator, int newMode) {
+		calculator.getContentPane().removeAll();
+		initialize(calculator, newMode);
+		calculator.revalidate();
+		calculator.repaint();
+	}
+
+	public static void initialize(Calculator calculator, int mode) {
+		calculator.setCalculatorState(new CalculatorState());
+
+		switch (mode) {
+			case 0 -> calculator.setCalculatorUI
+					(new StandardCalculatorUI(calculator, calculator.getCalculatorState()));
+			case 1 -> calculator.setCalculatorUI
+					(new GraphingCalculatorUI(calculator, calculator.getCalculatorState()));
+			default -> {
+				System.err.println("This shouldn't have happened.");
+				System.exit(1);
+			}
+		}
+
+		calculator.setCalculatorModel
+				(new CalculatorModel(calculator, calculator.getCalculatorState(), calculator.getCalculatorUI()));
+		calculator.setActionListeners
+				(new ActionListeners(calculator.getCalculatorModel()));
+	}
+
+	//---boilerplate stuff---
+
+	public JTextField getOperandField() {
+		return operandField;
+	}
+
+	public JTextField getResultField() {
+		return resultField;
+	}
+
+	public CalculatorState getCalculatorState() {
+		return calculatorState;
+	}
+
+	public JPanel getButtonPanel() {
+		return buttonPanel;
+	}
+
+	public void setButtonPanel(JPanel buttonPanel) {
+		this.buttonPanel = buttonPanel;
 	}
 
 }

@@ -5,10 +5,11 @@ public class ActionListeners {
 	private static CalculatorModel calculatorModel;
 
 	public ActionListeners(CalculatorModel calculatorModel) {
-		this.calculatorModel = calculatorModel;
+		ActionListeners.calculatorModel = calculatorModel;
 	}
 
 	public static class NumberListener implements ActionListener {
+
 		public void actionPerformed(ActionEvent e) {
 			try {
 				calculatorModel.handleNumberInput(e);
@@ -17,9 +18,11 @@ public class ActionListeners {
 				CalculatorUI.operandField.setText("Error: Reenter Number.");
 			}
 		}
+
 	}
 
 	public static class OperationListener implements ActionListener {
+
 		public void actionPerformed(ActionEvent e) {
 			String actionCommand = e.getActionCommand();
 
@@ -35,16 +38,18 @@ public class ActionListeners {
 
 			if (actionCommand.charAt(0) == '=' ) {
 				calculatorModel.performSum();
-				return;
 			}
 
 		}
+
 	}
 
 	public static class TrigonometryListener implements ActionListener {
+
 		public void actionPerformed(ActionEvent e) {
 			// todo
 		}
+
 	}
 
 

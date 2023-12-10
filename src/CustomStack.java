@@ -63,6 +63,7 @@ public class CustomStack<T> implements Iterable<T> {
 	int size() {
 		return size;
 	}
+
 	boolean isEmpty() {
 		return size == 0;
 	}
@@ -70,6 +71,7 @@ public class CustomStack<T> implements Iterable<T> {
 	T get(int i) {
 		return (T) elements[i];
 	}
+
 	void ensureCapacity() {
 		if (elements.length == size) {
 			elements = Arrays.copyOf(elements, size * 2);

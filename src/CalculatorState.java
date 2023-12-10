@@ -18,6 +18,8 @@ public class CalculatorState {
 
 
 
+	//---boilerplate stuff---
+
 	public StringBuilder getStringBuilder() {
 		return stringBuilder;
 	}
@@ -41,4 +43,5 @@ public class CalculatorState {
 	public void setErrorState(boolean errorState) {
 		this.errorState = errorState;
 	}
+
 }
