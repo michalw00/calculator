@@ -53,10 +53,15 @@ public class GraphingCalculatorUI extends CalculatorUI
 						operandField.setText(operandField.getText()+Math.PI);
 					}));
 					break;
-                /*case "sin":
-                case "cos":
-                case "tan": // todo
-                    break; */
+				case 'x':
+					addButton(getButtonPanel(), label, (e -> {
+						if (!operandField.getText().trim().isEmpty()) {
+							getCalculatorState().handleErrorState();
+							String temp = operandField.getText();
+							operandField.setText(temp + '*' + temp.charAt(temp.length() - 1));
+						}
+					}));
+					break;
 				default:
 					if (Character.isDigit(charAt0)) {
 						addButton(getButtonPanel(), label, new ActionListeners.NumberListener());
