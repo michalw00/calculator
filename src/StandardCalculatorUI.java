@@ -70,6 +70,15 @@ public class StandardCalculatorUI extends CalculatorUI
                 case "cos":
                 case "tan": // todo
                     break; */
+				case 'x':
+					addButton(getButtonPanel(), label, (e -> {
+						if (!operandField.getText().trim().isEmpty()) {
+							getCalculatorState().handleErrorState();
+							String temp = operandField.getText();
+							operandField.setText(temp + '*' + temp.charAt(temp.length() - 1));
+						}
+					}));
+					break;
 				default:
 					if (Character.isDigit(charAt0)) {
 						addButton(getButtonPanel(), label, new ActionListeners.NumberListener());
