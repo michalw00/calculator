@@ -54,7 +54,7 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		String resultToString = calculatorUI.getResultField().getText();
 		resultToString += operandFieldText;
 		String newOperandField =
-				Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString)));
+				Double.toString(InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(resultToString, 0)));
 		calculatorUI.getOperandField().setText("");
 
 		calculatorUI.getResultField().setText(calculatorUI.getResultField().getText()+operandFieldText+"=");
@@ -62,8 +62,27 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		calculatorState.getStringBuilder().setLength(0);
 	}
 
+	public void plotGraph() { // todo
+		if (calculatorState.getLastOperator() == null || calculatorState.getLastOperator() == '=')
+			return;
+
+		String operandFieldText = calculatorUI.getOperandField().getText();
+		int currentY = Integer.parseInt(InfixToPostfix.infixToPostfix(operandFieldText, 0))
+				* calculatorUI.getGraphWindow().WINDOW_HEIGHT/2;
+		int lastX = 0;
+		int lastY = currentY;
+		for (int currentX = 1; currentX < GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH; currentX++) {
+			currentY = Integer.parseInt(InfixToPostfix.infixToPostfix(operandFieldText, currentX));
+			calculatorUI.getGraphWindow().paint(calculatorState.getGraphicsState(), lastX, lastY, currentX, currentY); // todo
+			lastX = currentX;
+			lastY = currentY;
+		}
+
+	}
+
 	public void handleParenthesis(String actionCommand) {
 		// todo: if (actionCommand is ')' and there is no '(' in result field) return;
+		// ^ technically this should be checked in the InfixToPostfix class, double check
 
 		calculatorState.setLastOperator(actionCommand.charAt(0));
 

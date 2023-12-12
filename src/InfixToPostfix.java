@@ -6,7 +6,7 @@ public class InfixToPostfix {
     public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
     public static final Pattern OPERATOR = Pattern.compile("[+\\-*/]");
 
-    public static String infixToPostfix(String expression) {
+    public static String infixToPostfix(String expression, int argument) {
         CustomStack<Character> stack = new CustomStack<>();
         Scanner scan = new Scanner(expression).useDelimiter("((?<=\\+)|(?=\\+)|(?<=-)|(?=-)|(?<=\\*)|(?=\\*)|(?<=/)|(?=/)|(?<=\\()|(?=\\)))");
         StringBuilder stringBuilder = new StringBuilder();
@@ -17,8 +17,11 @@ public class InfixToPostfix {
             if (scan.hasNext("\\(")) {
                 next = scan.next();
                 stack.push(next.charAt(0));
-            } else if (scan.hasNext(UNSIGNED_DOUBLE)) {
+            } else if (scan.hasNext(UNSIGNED_DOUBLE) || scan.hasNext("^[xyz]+$")) {
                 next = scan.next();
+                if (next.matches("^[xyz]+$")) {
+                    next = Double.toString(argument);
+                }
                 stringBuilder.append(next).append(" ");
             } else if (scan.hasNext(OPERATOR)) {
                 next = scan.next();
@@ -43,7 +46,7 @@ public class InfixToPostfix {
                     System.exit(1);
                 }
             }
-        } while (scan.hasNext());
+        } while (scan.hasNext()); // todo: add division by zero check, it needs to be done here because of graphing mode
 
             while (!stack.isEmpty()) {
                 if (stack.peek() == '(') {

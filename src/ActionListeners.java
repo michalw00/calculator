@@ -40,6 +40,10 @@ public class ActionListeners {
 				calculatorModel.performSum();
 			}
 
+			if (actionCommand.charAt(0) == 'E' ) {
+				calculatorModel.plotGraph();
+			}
+
 		}
 
 	}

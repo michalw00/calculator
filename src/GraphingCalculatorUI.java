@@ -4,6 +4,7 @@ import java.awt.*;
 public class GraphingCalculatorUI extends CalculatorUI
 		implements Calculator.CalculatorGraphingMode, Calculator.CalculatorMode {
 
+
 	public GraphingCalculatorUI(Calculator calculator, CalculatorState calculatorState) {
 		super(calculator, calculatorState);
 		initializeCalculatorUI();
@@ -26,9 +27,9 @@ public class GraphingCalculatorUI extends CalculatorUI
 				{"sin", "7", "8", "9", "/",
 				"cos", "4", "5", "6", "*",
 				"tan", "1", "2", "3", "-",
-				"π",".", "0", "=", "+",
+				"π",".", "0", "ENTER", "+",
 				"x\u00B2", "RESET", "CLEAR", "(", ")",
-				"x", "y", };
+				"arg x" };
 
 		for (String label : buttonLabels) {
 			char charAt0 = label.charAt(0);
@@ -47,10 +48,15 @@ public class GraphingCalculatorUI extends CalculatorUI
 							operandField.setText("");
 					}));
 					break;
+                /*  case "sin":
+                    case "cos":
+                    case "tan": // todo
+                    break; */
 				case 'π':
 					addButton(getButtonPanel(), label, (e -> {
-						getCalculatorState().handleErrorState();
-						operandField.setText(operandField.getText()+Math.PI);
+						getCalculatorState().handleErrorState(); // todo: Put those three lines in a helper method, since it's redundancy. See below.
+						String temp = operandField.getText();    //
+						operandField.setText(temp+Math.PI);      //
 					}));
 					break;
 				case 'x':
@@ -60,6 +66,13 @@ public class GraphingCalculatorUI extends CalculatorUI
 							String temp = operandField.getText();
 							operandField.setText(temp + '*' + temp.charAt(temp.length() - 1));
 						}
+					}));
+					break;
+				case 'a':
+					addButton(getButtonPanel(), label, (e -> {
+						getCalculatorState().handleErrorState();
+						String temp = operandField.getText();
+						operandField.setText(temp + '*' + temp.charAt(temp.length() - 1));
 					}));
 					break;
 				default:

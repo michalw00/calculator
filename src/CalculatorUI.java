@@ -6,10 +6,10 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 	private static final int WIDTH = 420, HEIGHT = 250;
 	public static final int DIGITS_LIMIT = 30;
 	public static final Color BACKGROUND_COLOR = new Color(223, 223, 223);
-	private GraphWindow graphWindow;
 
 	public static JTextField resultField, operandField;
 	public Calculator calculator;
+	private GraphingCalculatorUI.GraphWindow graphWindow;
 	private final CalculatorState calculatorState;
 
 	private JPanel buttonPanel;
@@ -48,7 +48,7 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 		}));
 		addMenuItem(dropdownMenu, "Graphing", (e -> {
 			if (!(calculator.getCalculatorUI() instanceof GraphingCalculatorUI)) {
-				graphWindow = new GraphWindow();
+				graphWindow = new GraphingCalculatorUI.GraphWindow();
 				graphWindow.setVisible(true);
 				reset(calculator, 1);
 			}
@@ -72,7 +72,7 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 	}
 	//--------------------
 
-	public static class GraphWindow extends JFrame {
+	public class GraphWindow extends JFrame {
 		public static final int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
 
 		public GraphWindow() {
@@ -95,6 +95,12 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 			// axis labels
 			g.drawString("X", WINDOW_WIDTH - 20, WINDOW_HEIGHT / 2 + 15);
 			g.drawString("Y", WINDOW_WIDTH / 2 + 5, 45);
+		}
+
+		public void paint(Graphics g, int lastX, int lastY, int currentX, int currentY) { // todo
+			super.paint(g);
+			g.drawLine(lastX, lastY, currentX, currentY);
+			//calculatorState.setGraphicsState(g);
 		}
 	}
 
@@ -149,4 +155,11 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 		this.buttonPanel = buttonPanel;
 	}
 
+	public GraphingCalculatorUI.GraphWindow getGraphWindow() {
+		return graphWindow;
+	}
+
+	public void setGraphWindow(GraphingCalculatorUI.GraphWindow graphWindow) {
+		this.graphWindow = graphWindow;
+	}
 }

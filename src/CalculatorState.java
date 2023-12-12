@@ -1,7 +1,10 @@
+import java.awt.*;
+
 public class CalculatorState {
 	private StringBuilder stringBuilder;
 	private Character lastOperator;
 	private boolean errorState;
+	private Graphics graphicsState;
 
 	public CalculatorState() {
 		this.stringBuilder = new StringBuilder();
@@ -44,4 +47,11 @@ public class CalculatorState {
 		this.errorState = errorState;
 	}
 
+	public Graphics getGraphicsState() {
+		return graphicsState;
+	}
+
+	public void setGraphicsState(Graphics graphicsState) {
+		this.graphicsState = graphicsState;
+	}
 }
