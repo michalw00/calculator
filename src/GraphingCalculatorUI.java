@@ -11,6 +11,17 @@ public class GraphingCalculatorUI extends CalculatorUI
 	}
 
 	@Override
+	public void initializeInputPanel() {
+		JPanel inputPanel = new JPanel();
+		inputPanel.setLayout(new FlowLayout());
+
+		operandField = new JTextField(DIGITS_LIMIT);
+		operandField.setEditable(true);
+		inputPanel.add(operandField);
+		calculator.add(inputPanel, BorderLayout.CENTER);
+	}
+
+	@Override
 	public void initializeCalculatorUI() {
 		initializeMenu();
 		initializeInputPanel();

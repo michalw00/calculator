@@ -38,6 +38,7 @@ public class ActionListeners {
 
 			if (actionCommand.charAt(0) == '=' ) {
 				calculatorModel.performSum();
+				return;
 			}
 
 			if (actionCommand.charAt(0) == 'E' ) {
