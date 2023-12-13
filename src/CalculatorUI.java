@@ -7,12 +7,12 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 	public static final int DIGITS_LIMIT = 30;
 	public static final Color BACKGROUND_COLOR = new Color(223, 223, 223);
 
-	public static JTextField resultField, operandField;
-	public Calculator calculator;
-	private GraphingCalculatorUI.GraphWindow graphWindow;
-	private final CalculatorState calculatorState;
-
+	public JTextField resultField, operandField;
 	private JPanel buttonPanel;
+	private Calculator calculator;
+	private GraphingCalculatorUI.GraphWindow graphWindow;
+	private CalculatorState calculatorState;
+
 
 
 
@@ -114,7 +114,7 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 	}
 
 	public static void initialize(Calculator calculator, int mode) {
-		calculator.setCalculatorState(new CalculatorState());
+		calculator.setCalculatorState(new CalculatorState(calculator));
 
 		switch (mode) {
 			case 0 -> calculator.setCalculatorUI
@@ -162,4 +162,9 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 	public void setGraphWindow(GraphingCalculatorUI.GraphWindow graphWindow) {
 		this.graphWindow = graphWindow;
 	}
+
+	public Calculator getCalculator() {
+		return calculator;
+	}
+
 }

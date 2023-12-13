@@ -18,7 +18,7 @@ public class GraphingCalculatorUI extends CalculatorUI
 		operandField = new JTextField(DIGITS_LIMIT);
 		operandField.setEditable(true);
 		inputPanel.add(operandField);
-		calculator.add(inputPanel, BorderLayout.CENTER);
+		getCalculator().add(inputPanel, BorderLayout.CENTER);
 	}
 
 	@Override
@@ -26,6 +26,7 @@ public class GraphingCalculatorUI extends CalculatorUI
 		initializeMenu();
 		initializeInputPanel();
 		initializeButtonGrid();
+		resultField = null;
 	}
 
 	@Override
@@ -96,7 +97,7 @@ public class GraphingCalculatorUI extends CalculatorUI
 			}
 		}
 
-		calculator.add(getButtonPanel(), BorderLayout.SOUTH);
+		getCalculator().add(getButtonPanel(), BorderLayout.SOUTH);
 	}
 
 }

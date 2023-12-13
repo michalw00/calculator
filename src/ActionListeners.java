@@ -11,12 +11,7 @@ public class ActionListeners {
 	public static class NumberListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			try {
-				calculatorModel.handleNumberInput(e);
-			}
-			catch (NumberFormatException e2) {
-				CalculatorUI.operandField.setText("Error: Reenter Number.");
-			}
+			calculatorModel.handleNumberInput(e);
 		}
 
 	}

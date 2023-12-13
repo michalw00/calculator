@@ -1,19 +1,21 @@
 import java.awt.*;
 
 public class CalculatorState {
+	private Calculator calculator;
 	private StringBuilder stringBuilder;
 	private Character lastOperator;
 	private boolean errorState;
 	private Graphics graphicsState;
 
-	public CalculatorState() {
+	public CalculatorState(Calculator calculator) {
+		this.calculator = calculator;
 		this.stringBuilder = new StringBuilder();
 		this.errorState = false;
 	}
 
 	public void handleErrorState() {
 		if (errorState) {
-			CalculatorUI.operandField.setText("");
+			calculator.getCalculatorUI().getOperandField().setText("");
 			errorState = false;
 		}
 	}

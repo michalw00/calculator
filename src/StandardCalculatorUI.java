@@ -27,7 +27,7 @@ public class StandardCalculatorUI extends CalculatorUI
 		resultField.setEditable(false);
 		resultField.setBackground(BACKGROUND_COLOR);
 		textPanel.add(resultField);
-		calculator.add(textPanel, BorderLayout.NORTH);
+		getCalculator().add(textPanel, BorderLayout.NORTH);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class StandardCalculatorUI extends CalculatorUI
 			}
 		}
 
-		calculator.add(getButtonPanel(), BorderLayout.SOUTH);
+		getCalculator().add(getButtonPanel(), BorderLayout.SOUTH);
 	}
 
 }
