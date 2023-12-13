@@ -6,7 +6,7 @@ public class InfixToPostfix {
     public static final Pattern CHARACTER = Pattern.compile("\\S.*?");
     public static final Pattern OPERATOR = Pattern.compile("[+\\-*/]");
 
-    public static String infixToPostfix(String expression, int argument) {
+    public static String infixToPostfix(String expression) {
         CustomStack<Character> stack = new CustomStack<>();
         Scanner scan = new Scanner(expression).useDelimiter("((?<=\\+)|(?=\\+)|(?<=-)|(?=-)|(?<=\\*)|(?=\\*)|(?<=/)|(?=/)|(?<=\\()|(?=\\)))");
         StringBuilder stringBuilder = new StringBuilder();
@@ -17,11 +17,8 @@ public class InfixToPostfix {
             if (scan.hasNext("\\(")) {
                 next = scan.next();
                 stack.push(next.charAt(0));
-            } else if (scan.hasNext(UNSIGNED_DOUBLE) || scan.hasNext("^[xyz]+$")) {
+            } else if (scan.hasNext(UNSIGNED_DOUBLE)) {
                 next = scan.next();
-                if (next.matches("^[xyz]+$")) {
-                    next = Double.toString(argument);
-                }
                 stringBuilder.append(next).append(" ");
             } else if (scan.hasNext(OPERATOR)) {
                 next = scan.next();
@@ -58,6 +55,30 @@ public class InfixToPostfix {
 
 
         return stringBuilder.toString().trim();
+    }
+
+    public static String replaceVariableWithArgumentValue(String expression, Integer argument) {
+        String[] stringArray = new String[expression.length()];
+        char[] charArray = expression.toCharArray();
+
+        for (int i = 0; i < stringArray.length; i++)
+            stringArray[i] = Character.toString(charArray[i]);
+
+        //String currentString : stringArray
+        String currentString;
+        for (int i = 0; i < stringArray.length; i++) {
+            if (stringArray[i].charAt(0) == 'x') { // todo: add support for more and different variables, regex pattern for xyz didn't work for some reason
+                currentString = argument.toString();
+                stringArray[i] = currentString;
+            }
+        }
+
+        StringBuilder concatenatedString = new StringBuilder();
+        for (String str : stringArray) {
+            concatenatedString.append(str);
+        }
+
+        return concatenatedString.toString();
     }
 
     private static boolean firstPrecedes(char firstOperator, char secondOperator) {

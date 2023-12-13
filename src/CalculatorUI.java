@@ -96,9 +96,13 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 			g.drawString("Y", WINDOW_WIDTH / 2 + 5, 45);
 		}
 
-		public void paint(Graphics g, int lastX, int lastY, int currentX, int currentY) { // todo
+		public void paint(Graphics g, int lastX, double lastY, int currentX, double currentY) { // todo
 			super.paint(g);
-			g.drawLine(lastX, lastY, currentX, currentY);
+
+			int intValueOfY = (int) Math.round(currentY);
+			int intValueOfLastY = (int) Math.round(lastY);
+
+			g.drawLine(lastX, intValueOfY, currentX, intValueOfLastY);
 			//calculatorState.setGraphicsState(g);
 		}
 	}
