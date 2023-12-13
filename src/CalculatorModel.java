@@ -63,8 +63,6 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 	}
 
 	public void plotGraph() { // todo
-		if (calculatorState.getLastOperator() == null || calculatorState.getLastOperator() == '=')
-			return;
 
 		String operandFieldText = calculatorUI.getOperandField().getText();
 		int currentY = Integer.parseInt(InfixToPostfix.infixToPostfix(operandFieldText, 0))
