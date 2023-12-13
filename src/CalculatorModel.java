@@ -68,12 +68,12 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 
 		String operandFieldText = calculatorUI.getOperandField().getText();
 		int currentY = Integer.parseInt(InfixToPostfix.infixToPostfix(operandFieldText, 0))
-				* calculatorUI.getGraphWindow().WINDOW_HEIGHT/2;
+				* calculator.getGraphWindow().WINDOW_HEIGHT/2;
 		int lastX = 0;
 		int lastY = currentY;
 		for (int currentX = 1; currentX < GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH; currentX++) {
 			currentY = Integer.parseInt(InfixToPostfix.infixToPostfix(operandFieldText, currentX));
-			calculatorUI.getGraphWindow().paint(calculatorState.getGraphicsState(), lastX, lastY, currentX, currentY); // todo
+			calculator.getGraphWindow().paint(calculatorState.getGraphicsState(), lastX, lastY, currentX, currentY); // todo
 			lastX = currentX;
 			lastY = currentY;
 		}

@@ -10,7 +10,6 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 	public JTextField resultField, operandField;
 	private JPanel buttonPanel;
 	private Calculator calculator;
-	private GraphingCalculatorUI.GraphWindow graphWindow;
 	private CalculatorState calculatorState;
 
 
@@ -43,14 +42,14 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 
 		addMenuItem(dropdownMenu, "Standard", (e -> {
 			if (calculator.getCalculatorUI() instanceof GraphingCalculatorUI) {
-				graphWindow.setVisible(false);
+				reset(calculator, 0);
 			}
 		}));
 		addMenuItem(dropdownMenu, "Graphing", (e -> {
 			if (!(calculator.getCalculatorUI() instanceof GraphingCalculatorUI)) {
-				graphWindow = new GraphingCalculatorUI.GraphWindow();
-				graphWindow.setVisible(true);
 				reset(calculator, 1);
+				calculator.setGraphWindow(new GraphingCalculatorUI.GraphWindow());
+				calculator.getGraphWindow().setVisible(true);
 			}
 		}));
 
@@ -106,7 +105,11 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 
 	//---UI utils---
 
-	public static void reset(Calculator calculator, int newMode) {
+	public void reset(Calculator calculator, int newMode) {
+		if (newMode == 0 && calculator.getGraphWindow() != null) {
+			calculator.getGraphWindow().dispose();
+			calculator.setCalculatorUI(null);
+		}
 		calculator.getContentPane().removeAll();
 		initialize(calculator, newMode);
 		calculator.revalidate();
@@ -153,14 +156,6 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 
 	public void setButtonPanel(JPanel buttonPanel) {
 		this.buttonPanel = buttonPanel;
-	}
-
-	public GraphingCalculatorUI.GraphWindow getGraphWindow() {
-		return graphWindow;
-	}
-
-	public void setGraphWindow(GraphingCalculatorUI.GraphWindow graphWindow) {
-		this.graphWindow = graphWindow;
 	}
 
 	public Calculator getCalculator() {

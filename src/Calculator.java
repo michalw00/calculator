@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 public class Calculator extends JFrame {
     private CalculatorState calculatorState;
     private CalculatorUI calculatorUI;
+    private GraphingCalculatorUI.GraphWindow graphWindow;
     private CalculatorModel calculatorModel;
     private ActionListeners actionListeners;
 
@@ -81,5 +82,13 @@ public class Calculator extends JFrame {
 
     public void setActionListeners(ActionListeners actionListeners) {
         this.actionListeners = actionListeners;
+    }
+
+    public GraphingCalculatorUI.GraphWindow getGraphWindow() {
+        return graphWindow;
+    }
+
+    public void setGraphWindow(GraphingCalculatorUI.GraphWindow graphWindow) {
+        this.graphWindow = graphWindow;
     }
 }
