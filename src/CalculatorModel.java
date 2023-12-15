@@ -83,9 +83,6 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 	}
 
 	public void handleParenthesis(String actionCommand) {
-		// todo: if (actionCommand is ')' and there is no '(' in result field) return;
-		// ^ technically this should be checked in the InfixToPostfix class, double check
-
 		calculatorState.setLastOperator(actionCommand.charAt(0));
 
 		String tempOperand = calculatorUI.getOperandField().getText();
