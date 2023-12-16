@@ -74,7 +74,7 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		for (int currentX = 1; currentX < GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH; currentX++) {
 			expression = InfixToPostfix.replaceVariableWithArgumentValue(operandFieldText, currentX);
 			currentY = InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(expression)) * middleWidth;
-			calculator.getGraphWindow().paint(calculatorState.getGraphicsState(), lastX, lastY, currentX, currentY);
+			calculator.getGraphWindow().addLine(lastX, lastY, currentX, currentY);
 
 			lastX = currentX;
 			lastY = currentY;

@@ -11,6 +11,7 @@ public class CalculatorState {
 		this.calculator = calculator;
 		this.stringBuilder = new StringBuilder();
 		this.errorState = false;
+		//this.graphicsState =
 	}
 
 	public void handleErrorState() {

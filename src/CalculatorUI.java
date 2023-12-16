@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public abstract class CalculatorUI implements Calculator.CalculatorView {
 	private static final int WIDTH = 420, HEIGHT = 250;
@@ -73,6 +74,7 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 
 	public class GraphWindow extends JFrame {
 		public static final int WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
+		private ArrayList<Line> lines = new ArrayList<>();
 
 		public GraphWindow() {
 			super("Graph");
@@ -80,6 +82,7 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 			setResizable(false);
 			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			getContentPane().setBackground(Color.WHITE);
+			//setLocationRelativeTo(null);
 		}
 
 		public void paint(Graphics g) {
@@ -94,17 +97,34 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 			// axis labels
 			g.drawString("X", WINDOW_WIDTH - 20, WINDOW_HEIGHT / 2 + 15);
 			g.drawString("Y", WINDOW_WIDTH / 2 + 5, 45);
+
+			for (Line line : lines) {
+				g.drawLine(line.x1, (int) line.y1, line.x2, (int) line.y2);
+			}
+
+			calculatorState.setGraphicsState(g);
 		}
 
-		public void paint(Graphics g, int lastX, double lastY, int currentX, double currentY) { // todo
-			super.paint(g);
+		public void addLine(int lastX, double lastY, int currentX, double currentY) { // todo
 
 			int intValueOfY = (int) Math.round(currentY);
 			int intValueOfLastY = (int) Math.round(lastY);
 
-			g.drawLine(lastX, intValueOfY, currentX, intValueOfLastY);
-			//calculatorState.setGraphicsState(g);
+			lines.add(new Line(lastX, intValueOfLastY, currentX, intValueOfY));
 		}
+
+		private static class Line {
+			int x1, x2;
+			double y1, y2;
+
+			public Line(int x1, double y1, int x2, double y2) {
+				this.x1 = x1;
+				this.y1 = y1;
+				this.x2 = x2;
+				this.y2 = y2;
+			}
+		}
+
 	}
 
 	//---UI utils---
