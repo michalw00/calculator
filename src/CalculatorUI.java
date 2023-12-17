@@ -82,7 +82,7 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 			setResizable(false);
 			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			getContentPane().setBackground(Color.WHITE);
-			//setLocationRelativeTo(null);
+			setLocationRelativeTo(null);
 		}
 
 		public void paint(Graphics g) {
@@ -98,19 +98,27 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 			g.drawString("X", WINDOW_WIDTH - 20, WINDOW_HEIGHT / 2 + 15);
 			g.drawString("Y", WINDOW_WIDTH / 2 + 5, 45);
 
+			// middle dot debug
+			/*
+			int centerX = getWidth() / 2;
+			int centerY = getHeight() / 2;
+			g.setColor(Color.RED);
+			g.fillOval(centerX - 5, centerY - 5, 10, 10); // Centered dot with a diameter of 10 pixels */
+
 			for (Line line : lines) {
 				g.drawLine(line.x1, (int) line.y1, line.x2, (int) line.y2);
 			}
 
-			calculatorState.setGraphicsState(g);
 		}
 
-		public void addLine(int lastX, double lastY, int currentX, double currentY) { // todo
+		public void addLine(int lastX, double lastY, int currentX, double currentY) {
 
 			int intValueOfY = (int) Math.round(currentY);
 			int intValueOfLastY = (int) Math.round(lastY);
 
 			lines.add(new Line(lastX, intValueOfLastY, currentX, intValueOfY));
+
+			repaint();
 		}
 
 		private static class Line {

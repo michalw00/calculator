@@ -63,22 +63,40 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 	}
 
 	public void plotGraph() {
-		double middleWidth = CalculatorUI.GraphWindow.WINDOW_HEIGHT / 2;
+		int centerX = GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH / 2;
+		int centerY = GraphingCalculatorUI.GraphWindow.WINDOW_HEIGHT / 2;
 
+		int numberOfArguments = 20;
+		double scaleX = (double) GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH / numberOfArguments;
+		double scaleY = (double) GraphingCalculatorUI.GraphWindow.WINDOW_HEIGHT / numberOfArguments;
+
+		int currentX = -numberOfArguments;
+		double currentY;
 		String operandFieldText = calculatorUI.getOperandField().getText();
-		String expression = InfixToPostfix.replaceVariableWithArgumentValue(operandFieldText, 0);
+		String expression = InfixToPostfix.replaceVariableWithArgumentValue(operandFieldText, currentX);
+		if (!isConstant(expression)) {
+			currentY = InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(expression)); // todo: add support for cases such as -2 * -2, or -20 + 2, 2 + -20
+		} else currentY = Integer.parseInt(expression);
 
-		double currentY = InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(expression)) * middleWidth;
-		int lastX = 0;
+		int lastX = currentX;
 		double lastY = currentY;
-		for (int currentX = 1; currentX < GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH; currentX++) {
+
+		for (currentX = lastX + 1; currentX < numberOfArguments; currentX++) {
+
 			expression = InfixToPostfix.replaceVariableWithArgumentValue(operandFieldText, currentX);
-			currentY = InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(expression)) * middleWidth;
-			calculator.getGraphWindow().addLine(lastX, lastY, currentX, currentY);
+			if (!isConstant(expression)) {
+				currentY = InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(expression));
+			} else currentY = Integer.parseInt(expression);
+
+			System.out.println("X: " + currentX + ", Y: " + currentY);
+
+			calculator.getGraphWindow().addLine(centerX + lastX * (int) scaleX, centerY - lastY * scaleY,
+					centerX + currentX * (int) scaleX, centerY - currentY * scaleY);
 
 			lastX = currentX;
 			lastY = currentY;
 		}
+		calculator.getGraphWindow().repaint();
 
 	}
 
@@ -118,6 +136,10 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 
 	private boolean isOperandFieldEmpty() {
 		return calculatorUI.getOperandField().getText().trim().isEmpty();
+	}
+
+	private boolean isConstant(String expression) {
+		return expression.matches("\\-?\\d+(\\.\\d+)?");
 	}
 
 }
