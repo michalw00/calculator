@@ -12,20 +12,32 @@ public class InfixToPostfix {
         StringBuilder stringBuilder = new StringBuilder();
         String next;
 
+        boolean lastTokenWasOperator = true;
+
         do {
 
             if (scan.hasNext("\\(")) {
                 next = scan.next();
                 stack.push(next.charAt(0));
+                lastTokenWasOperator = false;
             } else if (scan.hasNext(UNSIGNED_DOUBLE)) {
                 next = scan.next();
                 stringBuilder.append(next).append(" ");
+                lastTokenWasOperator = false;
             } else if (scan.hasNext(OPERATOR)) {
                 next = scan.next();
-                while (!stack.isEmpty() && stack.peek() != '(' && firstPrecedes(stack.peek(), next.charAt(0))) {
-                    stringBuilder.append(stack.pop()).append(" ");
+                if (lastTokenWasOperator && next.charAt(0) == '-') {
+                    // This is a unary operator, not a binary operator.
+                    stringBuilder.append(next);
+                    next = scan.next();
+                    stringBuilder.append(next).append(" ");
+                } else {
+                    while (!stack.isEmpty() && stack.peek() != '(' && firstPrecedes(stack.peek(), next.charAt(0))) {
+                        stringBuilder.append(stack.pop()).append(" ");
+                    }
+                    stack.push(next.charAt(0));
                 }
-                stack.push(next.charAt(0));
+                lastTokenWasOperator = true;
             } else {
                 if (!scan.hasNext("\\)")) {
                     System.err.println("Something went wrong, no right parenthesis was present.");
@@ -64,7 +76,6 @@ public class InfixToPostfix {
         for (int i = 0; i < stringArray.length; i++)
             stringArray[i] = Character.toString(charArray[i]);
 
-        //String currentString : stringArray
         String currentString;
         for (int i = 0; i < stringArray.length; i++) {
             if (stringArray[i].charAt(0) == 'x') { // todo: add support for more and different variables, regex pattern for xyz didn't work for some reason
@@ -130,16 +141,20 @@ public class InfixToPostfix {
         String next;
 
         do {
-            if (input.hasNext(UNSIGNED_DOUBLE)) {
-                next = input.findInLine(UNSIGNED_DOUBLE); // NOTE: finds next occurrence, that's how it scans the string, character by character
+            if (input.hasNext("-" + UNSIGNED_DOUBLE)) {
+                next = input.findInLine(UNSIGNED_DOUBLE);
+                stack.push(Double.valueOf("-"+next));
+            } else if (input.hasNext(UNSIGNED_DOUBLE)) {
+                next = input.findInLine(UNSIGNED_DOUBLE);
                 stack.push(Double.valueOf(next));
             } else if (input.hasNext(CHARACTER)){
                 next = input.findInLine(CHARACTER);
 
-                if (next.matches("\\s+")) continue; // Skips space characters
+                if (next.matches("\\s+")) continue; // Skips space characters.
 
                 double temp2 = stack.pop();
                 double temp1 = stack.pop();
+
                 double result;
                 switch(next.charAt(0)) {
                     case '*':
