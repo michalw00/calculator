@@ -90,8 +90,12 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 
 			System.out.println("X: " + currentX + ", Y: " + currentY);
 
-			calculator.getGraphWindow().addLine(centerX + lastX * (int) scaleX, centerY - lastY * scaleY,
-					centerX + currentX * (int) scaleX, centerY - currentY * scaleY);
+			double scaledLastX = centerX + lastX * (int) scaleX;
+			double scaledLastY = centerY - lastY * scaleY;
+			double scaledCurrentX = centerX + currentX * (int) scaleX;
+			double scaledCurrentY = centerY - currentY * scaleY;
+
+			calculator.getGraphWindow().addLine((int) scaledLastX, scaledLastY, (int) scaledCurrentX, scaledCurrentY);
 
 			lastX = currentX;
 			lastY = currentY;
