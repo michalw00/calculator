@@ -12,32 +12,33 @@ public class InfixToPostfix {
         StringBuilder stringBuilder = new StringBuilder();
         String next;
 
-        boolean lastTokenWasOperator = true;
+        boolean lastTokenWasBinaryOperator = true;
 
         do {
 
             if (scan.hasNext("\\(")) {
                 next = scan.next();
                 stack.push(next.charAt(0));
-                lastTokenWasOperator = false;
+                lastTokenWasBinaryOperator = false;
             } else if (scan.hasNext(UNSIGNED_DOUBLE)) {
                 next = scan.next();
                 stringBuilder.append(next).append(" ");
-                lastTokenWasOperator = false;
+                lastTokenWasBinaryOperator = false;
             } else if (scan.hasNext(OPERATOR)) {
                 next = scan.next();
-                if (lastTokenWasOperator && next.charAt(0) == '-') {
+                if (lastTokenWasBinaryOperator && next.charAt(0) == '-') {
                     // This is a unary operator, not a binary operator.
                     stringBuilder.append(next);
                     next = scan.next();
                     stringBuilder.append(next).append(" ");
+                    lastTokenWasBinaryOperator = false;
                 } else {
                     while (!stack.isEmpty() && stack.peek() != '(' && firstPrecedes(stack.peek(), next.charAt(0))) {
                         stringBuilder.append(stack.pop()).append(" ");
                     }
                     stack.push(next.charAt(0));
+                    lastTokenWasBinaryOperator = true;
                 }
-                lastTokenWasOperator = true;
             } else {
                 if (!scan.hasNext("\\)")) {
                     System.err.println("Something went wrong, no right parenthesis was present.");
