@@ -108,6 +108,7 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 			for (Line line : lines) {
 				g.drawLine(line.x1, (int) line.y1, line.x2, (int) line.y2);
 			}
+			lines = new ArrayList<>();
 
 		}
 

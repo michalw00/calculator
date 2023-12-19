@@ -75,7 +75,7 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		String operandFieldText = calculatorUI.getOperandField().getText();
 		String expression = InfixToPostfix.replaceVariableWithArgumentValue(operandFieldText, currentX);
 		if (!isConstant(expression)) {
-			currentY = InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(expression)); // todo: add support for cases such as -2 * -2, or -20 + 2, 2 + -20
+			currentY = InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(expression));
 		} else currentY = Integer.parseInt(expression);
 
 		int lastX = currentX;
