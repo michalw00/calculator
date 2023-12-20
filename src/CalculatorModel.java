@@ -66,11 +66,11 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		int centerX = GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH / 2;
 		int centerY = GraphingCalculatorUI.GraphWindow.WINDOW_HEIGHT / 2;
 
-		int numberOfArguments = 20;
+		int numberOfArguments = 3;
 		double scaleX = (double) GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH / numberOfArguments;
 		double scaleY = (double) GraphingCalculatorUI.GraphWindow.WINDOW_HEIGHT / numberOfArguments;
 
-		int currentX = -numberOfArguments;
+		double currentX = -numberOfArguments;
 		double currentY;
 		String operandFieldText = calculatorUI.getOperandField().getText();
 		String expression = InfixToPostfix.replaceVariableWithArgumentValue(operandFieldText, currentX);
@@ -78,10 +78,10 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 			currentY = InfixToPostfix.evaluatePostfix(InfixToPostfix.infixToPostfix(expression));
 		} else currentY = Integer.parseInt(expression);
 
-		int lastX = currentX;
+		double lastX = currentX;
 		double lastY = currentY;
 
-		for (currentX = lastX + 1; currentX < numberOfArguments; currentX++) {
+		for (currentX = lastX + 0.1; currentX < numberOfArguments; currentX++) {
 
 			expression = InfixToPostfix.replaceVariableWithArgumentValue(operandFieldText, currentX);
 			if (!isConstant(expression)) {

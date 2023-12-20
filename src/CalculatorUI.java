@@ -112,6 +112,11 @@ public abstract class CalculatorUI implements Calculator.CalculatorView {
 
 		}
 
+		public void reset() {
+			lines = new ArrayList<>();
+			repaint();
+		}
+
 		public void addLine(int lastX, double lastY, int currentX, double currentY) {
 
 			int intValueOfY = (int) Math.round(currentY);

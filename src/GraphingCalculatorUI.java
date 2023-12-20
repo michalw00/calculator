@@ -45,20 +45,16 @@ public class GraphingCalculatorUI extends CalculatorUI
 
 		for (String label : buttonLabels) {
 			char charAt0 = label.charAt(0);
-			switch (charAt0) {
+			switch (charAt0) { // todo: error handling of nonsense expressions such as 2+*+
 				case 'R':
 					addButton(getButtonPanel(), label, (e -> {
-						resultField.setText("");
 						operandField.setText("");
-						getCalculatorState().getStringBuilder().setLength(0);
-						getCalculatorState().setLastOperator(null);
+						getCalculator().getGraphWindow().reset();
 					}));
 					break;
 				case 'C':
-					addButton(getButtonPanel(), label, (e -> {
-						if (getCalculatorState().getLastOperator() != null && getCalculatorState().getLastOperator() != '=')
-							operandField.setText("");
-					}));
+					addButton(getButtonPanel(), label, e ->
+							operandField.setText(""));
 					break;
                 /*  case "sin":
                     case "cos":
@@ -66,9 +62,9 @@ public class GraphingCalculatorUI extends CalculatorUI
                     break; */
 				case 'π':
 					addButton(getButtonPanel(), label, (e -> {
-						getCalculatorState().handleErrorState(); // todo: Put those three lines in a helper method, since it's redundancy. See below.
-						String temp = operandField.getText();    //
-						operandField.setText(temp+Math.PI);      //
+						getCalculatorState().handleErrorState();
+						String temp = operandField.getText();
+						operandField.setText(temp+Math.PI);
 					}));
 					break;
 				case 'x':
@@ -81,18 +77,16 @@ public class GraphingCalculatorUI extends CalculatorUI
 					}));
 					break;
 				case 'a':
-					addButton(getButtonPanel(), label, (e -> {
-						getCalculatorState().handleErrorState();
-						String temp = operandField.getText();
-						operandField.setText(temp + '*' + temp.charAt(temp.length() - 1));
-					}));
+					addButton(getButtonPanel(), label, e ->
+							operandField.setText(operandField.getText()+"x"));
+					break;
+				case 'E':
+					addButton(getButtonPanel(), label, e ->
+							getCalculator().getCalculatorModel().plotGraph());
 					break;
 				default:
-					if (Character.isDigit(charAt0)) {
-						addButton(getButtonPanel(), label, new ActionListeners.NumberListener());
-						break;
-					} else
-						addButton(getButtonPanel(), label, new ActionListeners.OperationListener());
+					addButton(getButtonPanel(), label, e ->
+							operandField.setText(operandField.getText()+label));
 					break;
 			}
 		}

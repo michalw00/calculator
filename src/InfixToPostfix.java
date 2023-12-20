@@ -70,7 +70,7 @@ public class InfixToPostfix {
         return stringBuilder.toString().trim();
     }
 
-    public static String replaceVariableWithArgumentValue(String expression, Integer argument) {
+    public static String replaceVariableWithArgumentValue(String expression, Double argument) {
         String[] stringArray = new String[expression.length()];
         char[] charArray = expression.toCharArray();
 
