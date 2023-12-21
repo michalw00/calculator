@@ -37,7 +37,7 @@ public class Calculator extends JFrame {
     }
 
     public interface CalculatorGraphingMode extends CalculatorMode {
-        // todo: additional methods
+
     }
 
     public interface CalculatorOperations {

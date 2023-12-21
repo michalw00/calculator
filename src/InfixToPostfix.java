@@ -79,7 +79,7 @@ public class InfixToPostfix {
 
         String currentString;
         for (int i = 0; i < stringArray.length; i++) {
-            if (stringArray[i].charAt(0) == 'x') { // todo: add support for more and different variables, regex pattern for xyz didn't work for some reason
+            if (stringArray[i].charAt(0) == 'x') {
                 currentString = argument.toString();
                 stringArray[i] = currentString;
             }
