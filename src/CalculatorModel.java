@@ -66,7 +66,7 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		int centerX = GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH / 2;
 		int centerY = GraphingCalculatorUI.GraphWindow.WINDOW_HEIGHT / 2;
 
-		int numberOfArguments = 3;
+		int numberOfArguments = 25;
 		double scaleX = (double) GraphingCalculatorUI.GraphWindow.WINDOW_WIDTH / numberOfArguments;
 		double scaleY = (double) GraphingCalculatorUI.GraphWindow.WINDOW_HEIGHT / numberOfArguments;
 
@@ -81,7 +81,7 @@ public class CalculatorModel implements Calculator.CalculatorOperations {
 		double lastX = currentX;
 		double lastY = currentY;
 
-		for (currentX = lastX + 0.1; currentX < numberOfArguments; currentX++) {
+		for (currentX = lastX + 0.01; currentX < numberOfArguments; currentX++) {
 
 			expression = InfixToPostfix.replaceVariableWithArgumentValue(operandFieldText, currentX);
 			if (!isConstant(expression)) {
